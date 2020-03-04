@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import UserAuth from "@/components/UserAuth";
 
 Vue.use(VueRouter);
 
@@ -18,6 +19,11 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
+  },
+  {
+    path: "/auth",
+    name: "UserAuth",
+    component: UserAuth
   }
 ];
 
@@ -25,6 +31,14 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  if (sessionStorage.getItem("authToken") !== null || to.path === "/auth") {
+    next();
+  } else {
+    next("/auth");
+  }
 });
 
 export default router;

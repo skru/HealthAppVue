@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="auth">
     <!-- <img alt="Vue logo" src="../assets/logo.png" /> -->
     <HelloWorld msg="Variable HERE" />
   </div>
@@ -7,12 +7,12 @@
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import HelloWorld from "@/components/UserAuth.vue";
 
 export default {
-  name: "Home",
+  name: "UserAuth",
   components: {
-    HelloWorld
+    Userauth
   }
 };
 </script>
