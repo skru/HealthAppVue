@@ -151,14 +151,10 @@ export default {
   methods: {
     signUp() {
       $.post(
-        "http://localhost:8000/dj-rest-auth/registration/",
+        "/api/dj-rest-auth/registration/",
         this.$data,
         data => {
-          // alert(
-          //   "Your account has been created. You will be signed in automatically"
-          // );
           this.signIn();
-          console.log(data);
         }
       ).fail(response => {
         alert(response.responseText);
@@ -166,7 +162,7 @@ export default {
     },
     signIn() {
       const credentials = { username: this.username, password: this.password1 };
-      $.post("http://localhost:8000/dj-rest-auth/login/", credentials, data => {
+      $.post("/api/dj-rest-auth/login/", credentials, data => {
         sessionStorage.setItem("authToken", data.auth_token);
         sessionStorage.setItem("username", this.username);
         //sessionStorage.setItem("password", this.password1);

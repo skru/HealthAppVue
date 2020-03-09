@@ -16,7 +16,7 @@
 </template>
 
 <script>
-  const domain = "127.0.0.1:8000";
+  const domain = "jm1179.xyz:11030";
 	const $ = window.jQuery;
 	let chatSocket = null;
 
@@ -37,16 +37,15 @@
 	    created(){
 
 	    	chatSocket = new WebSocket(
-		       'ws://' + this.url + '/ws/chat/' + this.roomId + '/'
+		       'wss://' + this.url + '/ws/chat/' + this.roomId + '/'
 		    );  
-		    console.log(chatSocket, $);            
 	    	chatSocket.onmessage = function(e) {
 		        var data = JSON.parse(e.data);
 		        $('#chat-log').val($('#chat-log').val() + data['message'] + '\n');
 		    };
 
 		    chatSocket.onclose = function() {
-		        console.error('Chat socket closed unexpectedly');
+		        //console.error('Chat socket closed unexpectedly');
 		    };
 	    },
 
