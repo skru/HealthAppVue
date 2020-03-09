@@ -2,6 +2,8 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import UserAuth from "@/components/UserAuth";
+import ChatRooms from "@/components/ChatRooms";
+import Room from "@/components/Room";
 
 Vue.use(VueRouter);
 
@@ -24,6 +26,16 @@ const routes = [
     path: "/auth",
     name: "UserAuth",
     component: UserAuth
+  },
+  {
+    path: "/chat",
+    name: "ChatRooms",
+    component: ChatRooms
+  },
+  {
+    path: "/chat/:roomId",
+    name: "Room",
+    component: Room
   }
 ];
 

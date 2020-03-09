@@ -145,18 +145,22 @@ export default {
       email: "",
       username: "",
       password1: "",
-      password2: "",
+      password2: ""
     };
   },
   methods: {
     signUp() {
-      $.post("http://localhost:8000/dj-rest-auth/registration/", this.$data, data => {
-        // alert(
-        //   "Your account has been created. You will be signed in automatically"
-        // );
-        this.signIn();
-        console.log(data);
-      }).fail(response => {
+      $.post(
+        "http://localhost:8000/dj-rest-auth/registration/",
+        this.$data,
+        data => {
+          // alert(
+          //   "Your account has been created. You will be signed in automatically"
+          // );
+          this.signIn();
+          console.log(data);
+        }
+      ).fail(response => {
         alert(response.responseText);
       });
     },
@@ -166,7 +170,7 @@ export default {
         sessionStorage.setItem("authToken", data.auth_token);
         sessionStorage.setItem("username", this.username);
         //sessionStorage.setItem("password", this.password1);
-        this.$router.push("/chats");
+        this.$router.push("/chat");
       }).fail(response => {
         alert(response.responseText);
       });
@@ -174,6 +178,7 @@ export default {
   }
 };
 </script>
+
 <style scoped>
 #auth-container {
   margin-top: 50px;
