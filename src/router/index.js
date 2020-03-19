@@ -4,10 +4,12 @@ import Home from "../views/Home.vue";
 import UserAuth from "@/components/UserAuth";
 import ChatRooms from "@/components/ChatRooms";
 import Room from "@/components/Room";
+import NotFoundComponent from "@/components/NotFoundComponent";
 
 Vue.use(VueRouter);
 
 const routes = [
+  { path: '*', component: NotFoundComponent },
   {
     path: "/",
     name: "Home",

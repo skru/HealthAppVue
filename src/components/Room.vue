@@ -16,7 +16,7 @@
 </template>
 
 <script>
-  const domain = "jm1179.xyz:11030";
+  const domain = "jm1179.xyz";
 	const $ = window.jQuery;
 	let chatSocket = null;
 
@@ -37,7 +37,7 @@
 	    created(){
 
 	    	chatSocket = new WebSocket(
-		       'wss://' + this.url + '/ws/chat/' + this.roomId + '/'
+		       'wss://' + this.url + '/api/ws/chat/' + this.roomId + '/'
 		    );  
 	    	chatSocket.onmessage = function(e) {
 		        var data = JSON.parse(e.data);

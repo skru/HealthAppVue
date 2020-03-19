@@ -94,6 +94,7 @@
                   </label>
                 </div>
               </div>
+               <input type="hidden" name="csrfmiddlewaretoken" v-model="csrfmiddlewaretoken" /> 
               <button type="submit" class="btn btn-block btn-primary">
                 Sign up
               </button>
@@ -125,6 +126,7 @@
                   placeholder="Password"
                   required
                 />
+                <input type="hidden" name="csrfmiddlewaretoken" v-model="csrfmiddlewaretoken" />    
               </div>
               <button type="submit" class="btn btn-block btn-primary">
                 Sign in
@@ -139,13 +141,31 @@
 
 <script>
 const $ = window.jQuery;
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 export default {
   data() {
     return {
       email: "",
       username: "",
       password1: "",
-      password2: ""
+      password2: "",
+      csrfmiddlewaretoken: getCookie('csrftoken'),
     };
   },
   methods: {
@@ -154,18 +174,20 @@ export default {
         "/api/dj-rest-auth/registration/",
         this.$data,
         data => {
-          this.signIn();
+          //this.signIn(data);
+          this.$router.push("/chat");
         }
       ).fail(response => {
         alert(response.responseText);
       });
     },
-    signIn() {
-      const credentials = { username: this.username, password: this.password1 };
+    signIn(data) {
+      const credentials = { username: this.username, password: this.password1, csrfmiddlewaretoken: this.csrfmiddlewaretoken };
+      window.console.log(data.auth_token);
       $.post("/api/dj-rest-auth/login/", credentials, data => {
         sessionStorage.setItem("authToken", data.auth_token);
         sessionStorage.setItem("username", this.username);
-        //sessionStorage.setItem("password", this.password1);
+        sessionStorage.setItem("password", this.password1);
         this.$router.push("/chat");
       }).fail(response => {
         alert(response.responseText);
