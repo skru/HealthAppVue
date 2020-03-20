@@ -140,7 +140,9 @@
 </template>
 
 <script>
+
 const $ = window.jQuery;
+import { SETTINGS } from "@/deploy_vars.js"
 
 function getCookie(name) {
     var cookieValue = null;
@@ -158,6 +160,9 @@ function getCookie(name) {
     return cookieValue;
 }
 
+
+
+
 export default {
   data() {
     return {
@@ -171,11 +176,11 @@ export default {
   methods: {
     signUp() {
       $.post(
-        "/api/dj-rest-auth/registration/",
+        SETTINGS.http + SETTINGS.domain + "/api/dj-rest-auth/registration/",
         this.$data,
         data => {
-          //this.signIn(data);
-          this.$router.push("/chat");
+          this.signIn(data);
+          //this.$router.push("/chat");
         }
       ).fail(response => {
         alert(response.responseText);
@@ -184,7 +189,7 @@ export default {
     signIn(data) {
       const credentials = { username: this.username, password: this.password1, csrfmiddlewaretoken: this.csrfmiddlewaretoken };
       window.console.log(data.auth_token);
-      $.post("/api/dj-rest-auth/login/", credentials, data => {
+      $.post(SETTINGS.http + SETTINGS.domain + "/api/dj-rest-auth/login/", credentials, data => {
         sessionStorage.setItem("authToken", data.auth_token);
         sessionStorage.setItem("username", this.username);
         sessionStorage.setItem("password", this.password1);

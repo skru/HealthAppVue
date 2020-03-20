@@ -26,9 +26,14 @@ import store from "./store";
 Vue.config.productionTip = false;
 // Vue.use(VueResource)
 // Vue.http.headers.common['HTTP_X_CSRFTOKEN'] = getCookie('csrftoken');
+// var DEBUG_SETTINGS = {"domain_url": ""};
+// if(window.location.href.indexOf("localhost") < 0) {
+//   DEBUG_SETTINGS.domain_url = "http://127.0.0.1:8000";
+// }
 
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+	// data: DEBUG_SETTINGS,
+	router,
+	store,
+	render: h => h(App)
 }).$mount("#app");

@@ -16,10 +16,9 @@
 </template>
 
 <script>
-  const domain = "jm1179.xyz";
+  import { SETTINGS } from "@/deploy_vars.js"
 	const $ = window.jQuery;
 	let chatSocket = null;
-
 
 	export default {
 
@@ -28,16 +27,13 @@
 	        message: "",
 	        chatLog: "",
 	        roomId: this.$route.params.roomId,
-	        url: domain,
-          pageUrl: domain + this.$route.path,
-	        
+          pageUrl: SETTINGS.domain + this.$route.path,
 	      };
 	    },
 
 	    created(){
-
 	    	chatSocket = new WebSocket(
-		       'wss://' + this.url + '/api/ws/chat/' + this.roomId + '/'
+		       SETTINGS.ws + SETTINGS.domain + '/api/ws/chat/' + this.roomId + '/'
 		    );  
 	    	chatSocket.onmessage = function(e) {
 		        var data = JSON.parse(e.data);
