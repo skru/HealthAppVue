@@ -81,19 +81,7 @@
                   />
                 </div> -->
               </div>
-              <div class="form-group">
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="toc"
-                    required
-                  />
-                  <label class="form-check-label" for="gridCheck">
-                    Accept terms and Conditions
-                  </label>
-                </div>
-              </div>
+             
                <!-- <input type="hidden" name="csrfmiddlewaretoken" v-model="csrfmiddlewaretoken" />  -->
               <button type="submit" class="btn btn-block btn-primary">
                 Sign up
@@ -173,7 +161,7 @@ export default {
             //console.log(response)
             self.signIn(self.$ata);
           })
-          .catch(error => console.log(error.response))
+          .catch(error => window.console.log(error.response))
     },
     signIn(data) {
       let self = this;
@@ -186,7 +174,7 @@ export default {
             sessionStorage.setItem("username", credentials.username);
             self.$router.push("/chat");
           })
-          .catch(error => console.log(error.response))
+          .catch(error => window.console.log(error.response))
     }
   }
 };
