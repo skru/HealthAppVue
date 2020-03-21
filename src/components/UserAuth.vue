@@ -62,7 +62,7 @@
                 </div>
                 <div class="form-group col-md-6">
                   <input
-                    v-model="password1"
+                    v-model="password"
                     type="password"
                     class="form-control"
                     id="password1"
@@ -70,7 +70,7 @@
                     required
                   />
                 </div>
-                <div class="form-group col-md-6">
+                <!-- <div class="form-group col-md-6">
                   <input
                     v-model="password2"
                     type="password"
@@ -79,7 +79,7 @@
                     placeholder="Password2"
                     required
                   />
-                </div>
+                </div> -->
               </div>
               <div class="form-group">
                 <div class="form-check">
@@ -119,7 +119,7 @@
               </div>
               <div class="form-group">
                 <input
-                  v-model="password1"
+                  v-model="password"
                   type="password"
                   class="form-control"
                   id="password"
@@ -145,25 +145,11 @@ const $ = window.jQuery;
 import { SETTINGS } from "@/deploy_vars.js"
 //import axios from 'axios';
 const axios = require('axios');
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+//axios.defaults.xsrfCookieName = 'csrftoken'
+//axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
 
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
+
 
 
 
@@ -174,69 +160,33 @@ export default {
     return {
       email: "",
       username: "",
-      password1: "",
-      password2: "",
-      csrfmiddlewaretoken: getCookie('csrftoken'),
+      password: "",
+      //password2: "",
     };
   },
   methods: {
     signUp() {
       let self = this;
-      // $.post(
-      //   SETTINGS.http + SETTINGS.domain + "/api/dj-rest-auth/registration/",
-      //   this.$data,
-      //   data => {
-      //     this.signIn(data);
-      //     //this.$router.push("/chat");
-      //   }
-      // ).fail(response => {
-      //   alert(response.responseText);
-      // });
-
       axios
-          .post(SETTINGS.http + SETTINGS.domain + "/api/dj-rest-auth/registration/", self.$data)
+          .post(SETTINGS.http + SETTINGS.domain + "/api/auth/users/", self.$data)
           .then(function (response) {
+            //console.log(response)
             self.signIn(self.$ata);
           })
-          .catch(error => alert(error.response.data.non_field_errors))
+          .catch(error => console.log(error.response))
     },
     signIn(data) {
       let self = this;
-      //const credentials = { username: this.username, password: this.password1, csrfmiddlewaretoken: getCookie('csrftoken') };
-      const credentials = { username: this.username, password: this.password1};
+      const credentials = { username: this.username, password: this.password};
+      //console.log(credentials)
       axios
-          .post(SETTINGS.http + SETTINGS.domain + "/api/dj-rest-auth/login/", credentials)
+          .post(SETTINGS.http + SETTINGS.domain + "/api/auth/token/login/", credentials)
           .then(function (response) {
-            sessionStorage.setItem("authToken", response.data.key);
+            sessionStorage.setItem("authToken", response.data.auth_token);
             sessionStorage.setItem("username", credentials.username);
-            //sessionStorage.setItem("password", credentials.password);
             self.$router.push("/chat");
           })
-          .catch(error => alert(error.response.data.non_field_errors))
-          
-      // axios({
-      //   method: 'post',
-      //   url: SETTINGS.http + SETTINGS.domain + "/api/dj-rest-auth/login/",
-      //   data: data
-      // }).then((response) => {
-      //   console.log(response);
-      //   sessionStorage.setItem("authToken", data.auth_token);
-      //   sessionStorage.setItem("username", this.username);
-      //   sessionStorage.setItem("password", this.password1);
-      //   this.$router.push("/chat");
-      // }, (error) => {
-      //   console.log(error);
-      //   alert(response.responseText);
-      // });
-
-      // $.post(SETTINGS.http + SETTINGS.domain + "/api/dj-rest-auth/login/", credentials, data => {
-      //   sessionStorage.setItem("authToken", data.auth_token);
-      //   sessionStorage.setItem("username", this.username);
-      //   sessionStorage.setItem("password", this.password1);
-      //   this.$router.push("/chat");
-      // }).fail(response => {
-      //   alert(response.responseText);
-      // });
+          .catch(error => console.log(error.response))
     }
   }
 };
