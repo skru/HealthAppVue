@@ -5,6 +5,9 @@ import UserAuth from "@/components/UserAuth";
 import ChatRooms from "@/components/ChatRooms";
 import Room from "@/components/Room";
 import NotFoundComponent from "@/components/NotFoundComponent";
+import LogOut from "@/components/LogOut";
+
+import store from "../store/index.js";
 
 Vue.use(VueRouter);
 
@@ -14,6 +17,11 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home
+  },
+  {
+    path: "/logout",
+    name: "Logout",
+    component: LogOut
   },
   {
     path: "/about",
@@ -29,11 +37,29 @@ const routes = [
     name: "UserAuth",
     component: UserAuth
   },
+
   {
     path: "/chat",
     name: "ChatRooms",
-    component: ChatRooms
+    component: ChatRooms,
+    beforeEnter(to, from, next) {
+      try {
+        var hasPermission =  store.state.auth_token;
+        if (hasPermission !== "") {
+          next()
+        } else {
+          next({
+            name: "UserAuth" // back to safety route //
+          })
+        }
+      } catch (e) {
+        next({
+          name: "UserAuth" // back to safety route //
+        })
+      }
+    }
   },
+  
   {
     path: "/chat/:roomId",
     name: "Room",
@@ -47,12 +73,12 @@ const router = new VueRouter({
   routes
 });
 
-router.beforeEach((to, from, next) => {
-  if (sessionStorage.getItem("authToken") !== null || to.path === "/auth") {
-    next();
-  } else {
-    next("/auth");
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   if (sessionStorage.getItem("authToken") !== null || to.path === "/auth") {
+//     next();
+//   } else {
+//     next("/auth");
+//   }
+// });
 
 export default router;

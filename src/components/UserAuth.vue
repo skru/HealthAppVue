@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <h1 class="text-center">Sign In/Sign Up</h1>
+    <h2 class="text-center">Account</h2>
     <div id="auth-container" class="row">
-      <div class="col-sm-4 offset-sm-4">
+      <div class="col-sm-6 offset-sm-3">
         <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
           <li class="nav-item">
             <a
@@ -128,19 +128,11 @@
 </template>
 
 <script>
-
-const $ = window.jQuery;
 import { SETTINGS } from "@/deploy_vars.js"
-//import axios from 'axios';
+const $ = window.jQuery;
 const axios = require('axios');
 //axios.defaults.xsrfCookieName = 'csrftoken'
 //axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
-
-
-
-
-
-
 
 export default {
 
@@ -158,7 +150,6 @@ export default {
       axios
           .post(SETTINGS.http + SETTINGS.domain + "/api/auth/users/", self.$data)
           .then(function (response) {
-            //console.log(response)
             self.signIn(self.$ata);
           })
           .catch(error => window.console.log(error.response))
@@ -166,15 +157,13 @@ export default {
     signIn(data) {
       let self = this;
       const credentials = { username: this.username, password: this.password};
-      //console.log(credentials)
       axios
           .post(SETTINGS.http + SETTINGS.domain + "/api/auth/token/login/", credentials)
           .then(function (response) {
-            sessionStorage.setItem("authToken", response.data.auth_token);
-            sessionStorage.setItem("username", credentials.username);
+            self.$store.commit('setAuthToken', response.data.auth_token)
             self.$router.push("/chat");
           })
-          .catch(error => window.console.log(error.response))
+          .catch(error => window.console.log(error))
     }
   }
 };

@@ -3,13 +3,33 @@
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
-      <router-link to="/auth">Login</router-link> |
-      <router-link to="/auth">Logout</router-link> |
-      <router-link to="/chat">Rooms</router-link>
+      <span v-if="isAuthed">
+        <router-link to="/logout">Logout</router-link> | 
+        <!-- <router-link to="/logout">Update Password</router-link> |  -->
+      </span>
+      <span v-else>
+        <router-link to="/auth">Login</router-link> | 
+      </span>
+      <router-link to="/chat">Chat</router-link>
     </div>
     <router-view />
   </div>
 </template>
+
+<script>
+export default {
+
+  data() {
+    return {
+      isAuthed: this.$store.getters.getAuthToken,
+    };
+  },
+
+  updated() {
+      this.isAuthed = this.$store.getters.getAuthToken;
+  },
+};
+</script>
 
 <style>
 #app {

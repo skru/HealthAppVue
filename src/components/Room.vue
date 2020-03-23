@@ -1,6 +1,7 @@
 <template>
 <div class="container">
-    <h1 class="text-center">{{pageUrl}}</h1>
+    <h2 class="text-center">Chat</h2>
+    <p>Share this link so others can join: <a :href="pageUrl">{{ pageUrl }}</a>
     <div id="auth-container" class="row">
       	<div class="col-sm-4 offset-sm-4">
           <form v-on:submit.prevent="addMessage">
