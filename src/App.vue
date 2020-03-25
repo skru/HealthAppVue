@@ -2,15 +2,16 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <span v-if="isAuthed">
-        <router-link to="/logout">Logout</router-link> | 
-        <!-- <router-link to="/logout">Update Password</router-link> |  -->
+      <router-link to="/about">About</router-link> | 
+      <router-link to="/chat">Chat</router-link> |
+      <span v-if="!isAuthed">
+        <router-link to="/auth">Login</router-link>
       </span>
       <span v-else>
-        <router-link to="/auth">Login</router-link> | 
+        <router-link to="/password">Update Password</router-link> | 
+        <router-link to="/logout">Logout</router-link>
       </span>
-      <router-link to="/chat">Chat</router-link>
+      
     </div>
     <router-view />
   </div>
@@ -26,6 +27,7 @@ export default {
   },
 
   updated() {
+    console.log("UPDATING APP.VUE")
       this.isAuthed = this.$store.getters.getAuthToken;
   },
 };

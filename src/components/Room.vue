@@ -3,7 +3,7 @@
     <h2 class="text-center">Chat</h2>
     <p>Share this link so others can join: <a :href="pageUrl">{{ pageUrl }}</a>
     <div id="auth-container" class="row">
-      	<div class="col-sm-4 offset-sm-4">
+      	<div class="col-sm-6 offset-sm-3">
           <form v-on:submit.prevent="addMessage">
     			<div class="form-group">
     			    <textarea class="form-control" id="chat-log" cols="100" rows="10" readonly></textarea><br/>

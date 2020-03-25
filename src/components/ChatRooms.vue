@@ -32,7 +32,8 @@ export default {
 
   methods: {
     selectRoom() {
-      window.location.pathname = "/chat/" + this.room + "/";
+      //window.location.pathname = "/chat/" + this.room + "/";
+      this.$router.push({ path: 'chat/' + this.room })
     }
   }
 };

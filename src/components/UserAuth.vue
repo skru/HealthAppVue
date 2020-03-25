@@ -38,51 +38,34 @@
             role="tabpanel"
             aria-labelledby="signin-tab"
           >
-            <form @submit.prevent="signUp">
+            <form class="text-left" @submit.prevent="signUp">
+               <div class="alert alert-danger" v-if="errors.non_field_errors">
+                  {{ errors.non_field_errors[0] }}
+              </div>
               <div class="form-group">
-                <input
-                  v-model="email"
-                  type="email"
-                  class="form-control"
-                  id="email"
-                  placeholder="Email Address"
-                  required
-                />
+                <label for="email">Email</label>
+                  <input v-model="email" type="email" class="form-control" id="email" placeholder="e.g. johnsemail@email.com" required>
+                  <div class="invalid-feedback" v-if="errors.emails != null">
+                      {{ errors.email[0]}}
+                  </div>
               </div>
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <input
-                    v-model="username"
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    placeholder="Username"
-                    required
-                  />
-                </div>
-                <div class="form-group col-md-6">
-                  <input
-                    v-model="password"
-                    type="password"
-                    class="form-control"
-                    id="password1"
-                    placeholder="Password1"
-                    required
-                  />
-                </div>
-                <!-- <div class="form-group col-md-6">
-                  <input
-                    v-model="password2"
-                    type="password"
-                    class="form-control"
-                    id="password2"
-                    placeholder="Password2"
-                    required
-                  />
-                </div> -->
+              <div class="form-group">
+                <label for="username">username</label>
+                  <input v-model="username" type="text" class="form-control" id="username" placeholder="e.g. John" required>
+                  <div class="alert alert-danger" v-if="errors.username != null">
+                      {{ errors.username[0] }}
+                  </div>
               </div>
-             
-               <!-- <input type="hidden" name="csrfmiddlewaretoken" v-model="csrfmiddlewaretoken" />  -->
+              <div class="form-group">
+                <label for="password">Password</label>
+                  <input v-model="password" type="password" class="form-control" id="password" required>
+                  <small id="passwordHelpBlock" class="form-text text-muted">
+                    Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                  </small>
+                  <div class="alert alert-danger" v-if="errors.password != null">
+                      {{ errors.password[0] }}
+                  </div>
+              </div>
               <button type="submit" class="btn btn-block btn-primary">
                 Sign up
               </button>
@@ -94,27 +77,17 @@
             role="tabpanel"
             aria-labelledby="signin-tab"
           >
-            <form @submit.prevent="signIn">
-              <div class="form-group">
-                <input
-                  v-model="username"
-                  type="text"
-                  class="form-control"
-                  id="username"
-                  placeholder="Username"
-                  required
-                />
+            <form class="text-left" @submit.prevent="signIn">
+              <div class="alert alert-danger" v-if="errors.non_field_errors">
+                  {{ errors.non_field_errors[0] }}
               </div>
               <div class="form-group">
-                <input
-                  v-model="password"
-                  type="password"
-                  class="form-control"
-                  id="password"
-                  placeholder="Password"
-                  required
-                />
-                <!-- <input type="hidden" name="csrfmiddlewaretoken" v-model="csrfmiddlewaretoken" />   -->  
+                <label for="username">Username</label>
+                  <input v-model="username" type="text" class="form-control" id="username" placeholder="e.g. John" required>
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                  <input v-model="password" type="password" class="form-control" id="password" placeholder="Password" required>
               </div>
               <button type="submit" class="btn btn-block btn-primary">
                 Sign in
@@ -129,11 +102,15 @@
 
 <script>
 import { SETTINGS } from "@/deploy_vars.js"
-const $ = window.jQuery;
 const axios = require('axios');
+const $ = window.jQuery // JQuery
 //axios.defaults.xsrfCookieName = 'csrftoken'
 //axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
-
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+  e.target // newly activated tab
+  e.relatedTarget // previous active tab
+  console.log("TAB")
+})
 export default {
 
   data() {
@@ -141,7 +118,8 @@ export default {
       email: "",
       username: "",
       password: "",
-      //password2: "",
+      errors: "",
+      
     };
   },
   methods: {
@@ -150,30 +128,42 @@ export default {
       axios
           .post(SETTINGS.http + SETTINGS.domain + "/api/auth/users/", self.$data)
           .then(function (response) {
-            self.signIn(self.$ata);
+            self.signIn();
           })
-          .catch(error => window.console.log(error.response))
+          .catch(function (error) {
+            if (error.response) {
+              console.log(error.request.response)
+              console.log(error.response.data);
+              if (error.response.data){
+                self.$data.errors = error.response.data
+              }
+            } 
+          });
+
     },
-    signIn(data) {
+    signIn() {
       let self = this;
       const credentials = { username: this.username, password: this.password};
       axios
-          .post(SETTINGS.http + SETTINGS.domain + "/api/auth/token/login/", credentials)
-          .then(function (response) {
-            self.$store.commit('setAuthToken', response.data.auth_token)
-            self.$router.push("/chat");
-          })
-          .catch(error => window.console.log(error))
+        .post(SETTINGS.http + SETTINGS.domain + "/api/auth/token/login/", credentials)
+        .then(function (response) {
+          axios.defaults.headers.common['Authorization'] = "Token " + response.data.auth_token; //set auth header
+          self.$store.commit('setAuthToken', response.data.auth_token)
+          self.$router.push("/chat");
+        })
+        .catch(function (error) {
+          if (error.response) {
+            console.log(error.response.data);
+            self.$data.errors = error.response.data
+          } 
+        });
     }
   }
 };
+
+
 </script>
 
 <style scoped>
-#auth-container {
-  margin-top: 50px;
-}
-.tab-content {
-  padding-top: 20px;
-}
+
 </style>

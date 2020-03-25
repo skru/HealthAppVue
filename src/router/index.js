@@ -6,6 +6,7 @@ import ChatRooms from "@/components/ChatRooms";
 import Room from "@/components/Room";
 import NotFoundComponent from "@/components/NotFoundComponent";
 import LogOut from "@/components/LogOut";
+import UpdatePassword from "@/components/UpdatePassword";
 
 import store from "../store/index.js";
 
@@ -59,12 +60,32 @@ const routes = [
       }
     }
   },
-  
   {
     path: "/chat/:roomId",
     name: "Room",
-    component: Room
-  }
+    component: Room,
+    beforeEnter(to, from, next) {
+      try {
+        var hasPermission =  store.state.auth_token;
+        if (hasPermission !== "") {
+          next()
+        } else {
+          next({
+            name: "UserAuth" // back to safety route //
+          })
+        }
+      } catch (e) {
+        next({
+          name: "UserAuth" // back to safety route //
+        })
+      }
+    }
+  },
+  {
+    path: "/password",
+    name: "UpdatePassword",
+    component: UpdatePassword
+  },
 ];
 
 const router = new VueRouter({
