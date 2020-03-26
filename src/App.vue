@@ -11,7 +11,6 @@
         <router-link to="/password">Update Password</router-link> | 
         <router-link to="/logout">Logout</router-link>
       </span>
-      
     </div>
     <router-view />
   </div>
@@ -27,7 +26,6 @@ export default {
   },
 
   updated() {
-    console.log("UPDATING APP.VUE")
       this.isAuthed = this.$store.getters.getAuthToken;
   },
 };
@@ -44,6 +42,7 @@ export default {
 
 #nav {
   padding: 30px;
+  margin-bottom: 50px;
 }
 
 #nav a {

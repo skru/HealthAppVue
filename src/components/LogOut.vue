@@ -15,12 +15,17 @@ export default {
      	axios
           .post(SETTINGS.http + SETTINGS.domain + "/api/auth/token/logout/")
           .then(function (response) {
-          	console.log("LOGGED OUT");
           	axios.defaults.headers.common['Authorization'] = ""; //remove auth header
             self.$store.commit('setAuthToken', "");
+            self.$toasted.success('Successfully Logged Out');
 			self.$router.push("/");
           })
-          .catch(error => window.console.log(error.response))
+          .catch(function (error) {
+            if (error.response) {
+              window.console.log(error.response);
+              self.$toasted.error('An Error Occurred');
+            } 
+          });
     }
  }
 </script>

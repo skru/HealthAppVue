@@ -12,6 +12,25 @@ import store from "../store/index.js";
 
 Vue.use(VueRouter);
 
+function checkAuthBeforePage(to, from, next){
+  // Check user is authorised (has token) redirect to login if fails
+  try {
+    var hasPermission =  store.state.auth_token;
+    if (hasPermission !== "") {
+      next()
+    } else {
+      router.app.$root.$toasted.info('Login Required');
+      next({
+        name: "UserAuth" // back to safety route //
+      })
+    }
+  } catch (e) {
+    next({
+      name: "UserAuth" // back to safety route //
+    })
+  }
+}
+
 const routes = [
   { path: '*', component: NotFoundComponent },
   {
@@ -44,20 +63,7 @@ const routes = [
     name: "ChatRooms",
     component: ChatRooms,
     beforeEnter(to, from, next) {
-      try {
-        var hasPermission =  store.state.auth_token;
-        if (hasPermission !== "") {
-          next()
-        } else {
-          next({
-            name: "UserAuth" // back to safety route //
-          })
-        }
-      } catch (e) {
-        next({
-          name: "UserAuth" // back to safety route //
-        })
-      }
+      checkAuthBeforePage(to, from, next)
     }
   },
   {
@@ -65,26 +71,16 @@ const routes = [
     name: "Room",
     component: Room,
     beforeEnter(to, from, next) {
-      try {
-        var hasPermission =  store.state.auth_token;
-        if (hasPermission !== "") {
-          next()
-        } else {
-          next({
-            name: "UserAuth" // back to safety route //
-          })
-        }
-      } catch (e) {
-        next({
-          name: "UserAuth" // back to safety route //
-        })
-      }
+      checkAuthBeforePage(to, from, next)
     }
   },
   {
     path: "/password",
     name: "UpdatePassword",
-    component: UpdatePassword
+    component: UpdatePassword,
+    beforeEnter(to, from, next) {
+      checkAuthBeforePage(to, from, next)
+    }
   },
 ];
 
@@ -93,13 +89,5 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 });
-
-// router.beforeEach((to, from, next) => {
-//   if (sessionStorage.getItem("authToken") !== null || to.path === "/auth") {
-//     next();
-//   } else {
-//     next("/auth");
-//   }
-// });
 
 export default router;

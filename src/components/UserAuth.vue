@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h2 class="text-center">Account</h2>
-    <div id="auth-container" class="row">
+    <div class="row">
       <div class="col-sm-6 offset-sm-3">
         <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
           <li class="nav-item">
@@ -45,7 +45,7 @@
               <div class="form-group">
                 <label for="email">Email</label>
                   <input v-model="email" type="email" class="form-control" id="email" placeholder="e.g. johnsemail@email.com" required>
-                  <div class="invalid-feedback" v-if="errors.emails != null">
+                  <div class="alert alert-danger" v-if="errors.emails != null">
                       {{ errors.email[0]}}
                   </div>
               </div>
@@ -103,14 +103,14 @@
 <script>
 import { SETTINGS } from "@/deploy_vars.js"
 const axios = require('axios');
-const $ = window.jQuery // JQuery
-//axios.defaults.xsrfCookieName = 'csrftoken'
-//axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-  e.target // newly activated tab
-  e.relatedTarget // previous active tab
-  console.log("TAB")
-})
+// const $ = window.jQuery // JQuery
+// //axios.defaults.xsrfCookieName = 'csrftoken'
+// //axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+// $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+//   e.target // newly activated tab
+//   e.relatedTarget // previous active tab
+//   console.log("TAB")
+// })
 export default {
 
   data() {
@@ -119,7 +119,6 @@ export default {
       username: "",
       password: "",
       errors: "",
-      
     };
   },
   methods: {
@@ -128,12 +127,11 @@ export default {
       axios
           .post(SETTINGS.http + SETTINGS.domain + "/api/auth/users/", self.$data)
           .then(function (response) {
+            self.$toasted.success('Account created')
             self.signIn();
           })
           .catch(function (error) {
             if (error.response) {
-              console.log(error.request.response)
-              console.log(error.response.data);
               if (error.response.data){
                 self.$data.errors = error.response.data
               }
@@ -150,20 +148,14 @@ export default {
           axios.defaults.headers.common['Authorization'] = "Token " + response.data.auth_token; //set auth header
           self.$store.commit('setAuthToken', response.data.auth_token)
           self.$router.push("/chat");
+          self.$toasted.success('Successfully signed in')
         })
         .catch(function (error) {
           if (error.response) {
-            console.log(error.response.data);
             self.$data.errors = error.response.data
           } 
         });
     }
   }
 };
-
-
 </script>
-
-<style scoped>
-
-</style>
