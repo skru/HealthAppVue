@@ -50,7 +50,7 @@
                   </div>
               </div>
               <div class="form-group">
-                <label for="username">username</label>
+                <label for="username">Username</label>
                   <input v-model="username" type="text" class="form-control" id="username" placeholder="e.g. John" required>
                   <div class="alert alert-danger" v-if="errors.username != null">
                       {{ errors.username[0] }}

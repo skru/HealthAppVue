@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import Conditions from "@/components/Conditions";
 import UserAuth from "@/components/UserAuth";
 import ChatRooms from "@/components/ChatRooms";
 import Room from "@/components/Room";
@@ -39,11 +40,6 @@ const routes = [
     component: Home
   },
   {
-    path: "/logout",
-    name: "Logout",
-    component: LogOut
-  },
-  {
     path: "/about",
     name: "About",
     // route level code-splitting
@@ -51,6 +47,11 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
+  },
+  {
+    path: "/conditions",
+    name: "Conditions",
+    component: Conditions
   },
   {
     path: "/auth",
@@ -81,6 +82,11 @@ const routes = [
     beforeEnter(to, from, next) {
       checkAuthBeforePage(to, from, next)
     }
+  },
+  {
+    path: "/logout",
+    name: "Logout",
+    component: LogOut
   },
 ];
 

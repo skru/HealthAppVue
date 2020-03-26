@@ -4,6 +4,7 @@ import "./registerServiceWorker";
 import router from "./router";
 import store from "./store";
 import Toasted from 'vue-toasted';
+import VueFuse from 'vue-fuse'
 
 Vue.config.productionTip = false;
 
@@ -13,4 +14,8 @@ new Vue({
 	render: h => h(App)
 }).$mount("#app");
 
+//toasted
 Vue.use(Toasted, { position: "top-center", duration: 3000, fullWidth: true})
+
+// fuse.js
+Vue.use(VueFuse)

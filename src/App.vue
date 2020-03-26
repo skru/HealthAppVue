@@ -3,6 +3,7 @@
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> | 
+      <router-link to="/conditions">Conditions</router-link> | 
       <router-link to="/chat">Chat</router-link> |
       <span v-if="!isAuthed">
         <router-link to="/auth">Login</router-link>
