@@ -48,7 +48,6 @@ export default {
   },
   methods: {
     textSearch() {
-      console.log("SEARCH")
       let self = this;
       axios
           .get(SETTINGS.http + SETTINGS.domain + "/api/conditions/", self.$data)
