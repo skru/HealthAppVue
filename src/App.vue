@@ -18,6 +18,9 @@
 </template>
 
 <script>
+import { SETTINGS } from "@/deploy_vars.js"
+const axios = require('axios');
+
 export default {
 
   data() {
@@ -29,6 +32,18 @@ export default {
   updated() {
       this.isAuthed = this.$store.getters.getAuthToken;
   },
+
+  created () {
+    let self = this;
+    axios
+      .get(SETTINGS.http + SETTINGS.domain + "/api/conditions/", self.$data)
+      .then(function (response) {
+        self.$store.commit('setConditionsData', response.data)
+      })
+      // .catch(function (error) {
+
+      // });
+  }
 };
 </script>
 
