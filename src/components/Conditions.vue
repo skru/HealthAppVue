@@ -14,7 +14,7 @@
         <button v-on:click="textSearch" class="btn btn-block btn-primary">
           Search
         </button>
-        <div v-for="condition in results" :key="condition.title">
+        <div v-for="condition in search_results" :key="condition.title">
           <br>
           <div class="card">
             <div class="card-header">
@@ -48,38 +48,26 @@ export default {
   },
   methods: {
     textSearch() {
-      let self = this;
-      axios
-          .get(SETTINGS.http + SETTINGS.domain + "/api/conditions/", self.$data)
-          .then(function (response) {
-            let data = response.data
-            let options = {
-              keys: ['title',]
-            };
-            try{
-              self.$search(self.$data.search_query, data, { keys: ['title'] }).then(result => {
-                self.$data.results = result
-                self.$data.search_results = result
-              })
-            } catch (error) {
-              window.console.log(error);
-            }
-          })
-          .catch(function (error) {
-            if (error.response) {
-              if (error.response.data){
-                window.console.log(error.response)
-                self.$data.errors = error.response.data
-              }
-            } 
-          });
-
+      this.$search(this.search_query, this.results, { keys: ['title'] }).then(result => {
+        this.search_results = result
+      })
     },
   },
+
   created () {
-    this.$on('results', results => {
-      this.results = results
-    })
+    let self = this;
+    axios
+      .get(SETTINGS.http + SETTINGS.domain + "/api/conditions/", self.$data)
+      .then(function (response) {
+        self.$data.results = response.data;
+      })
+      .catch(function (error) {
+        if (error.response) {
+          if (error.response.data){
+            self.$data.errors = error.response.data
+          }
+        } 
+      });
   }
 };
 </script>
