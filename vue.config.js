@@ -1,11 +1,18 @@
+//var webpack = require('webpack')
+
 module.exports = {
+//     mode: 'production',
+//     plugins: [
+//         new webpack.DefinePlugin({
+//             'process.env.NODE_ENV': JSON.stringify('production')
+//         })
+//     ],
     pwa: {
         workboxOptions: {
             skipWaiting: true,
-//             exclude: [
-
-//               //"assets/.htaccess"
-//             ]
+            exclude: [
+              ".htaccess"
+            ]
         },
         themeColor: "#FFFFFF",
         msTileColor: '#000000',

@@ -22,3 +22,4 @@ yarn-error.log*
 
 # Project Vars
 deploy_vars.js
+vue.config.js
