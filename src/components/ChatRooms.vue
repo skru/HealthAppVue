@@ -1,10 +1,13 @@
 <template>
-  <div class="container">
-    <h2 class="text-center">Chat Room</h2>
-    <p>Enter the name of a room to join or create</p>
-    <div class="row">
-      <div class="col-sm-6 offset-sm-3">
+  <div>
+    <p class="lead">
+      Enter the name of a room to join or create
+    </p>
+    <hr><br>
+    <div class="card">
+      <div class="card-body">
         <form @submit.prevent="selectRoom">
+          <label for="room-name-input">Room name</label>
           <input
             id="room-name-input"
             type="text"

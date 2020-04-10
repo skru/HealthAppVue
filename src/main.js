@@ -15,7 +15,7 @@ new Vue({
 }).$mount("#app");
 
 //toasted
-Vue.use(Toasted, { position: "top-center", duration: 3000, fullWidth: true})
+Vue.use(Toasted, { position: "top-right", duration: 3000, fullWidth: true})
 
 // fuse.js
 Vue.use(VueFuse)

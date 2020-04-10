@@ -22,12 +22,12 @@ function checkAuthBeforePage(to, from, next){
     } else {
       router.app.$root.$toasted.info('Login Required');
       next({
-        name: "UserAuth" // back to safety route //
+        name: "Login" // back to safety route //
       })
     }
   } catch (e) {
     next({
-      name: "UserAuth" // back to safety route //
+      name: "Login" // back to safety route //
     })
   }
 }
@@ -36,7 +36,7 @@ const routes = [
   { path: '*', component: NotFoundComponent },
   {
     path: "/",
-    name: "Home",
+    name: "Proactive Healthcare",
     component: Home
   },
   {
@@ -55,13 +55,13 @@ const routes = [
   },
   {
     path: "/auth",
-    name: "UserAuth",
+    name: "Login",
     component: UserAuth
   },
 
   {
     path: "/chat",
-    name: "ChatRooms",
+    name: "Your Practitioner",
     component: ChatRooms,
     beforeEnter(to, from, next) {
       checkAuthBeforePage(to, from, next)
@@ -76,8 +76,8 @@ const routes = [
     }
   },
   {
-    path: "/password",
-    name: "UpdatePassword",
+    path: "/account",
+    name: "Account",
     component: UpdatePassword,
     beforeEnter(to, from, next) {
       checkAuthBeforePage(to, from, next)

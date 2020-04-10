@@ -1,18 +1,22 @@
 <template>
-<div class="container">
-    <h2 class="text-center">Chat</h2>
-    <p>Share this link so others can join: <a :href="pageUrl">{{ pageUrl }}</a>
-    <div class="row">
-      	<div class="col-sm-6 offset-sm-3">
-          <form v-on:submit.prevent="addMessage">
-    			<div class="form-group">
-    			    <textarea class="form-control" id="chat-log" cols="100" rows="10" readonly></textarea><br/>
-    			    <input class="form-control" type="text" v-model="message"/><br/>
-    			    <button v-on:click="addMessage" class="btn btn-block btn-primary">Enter</button>
-    			 </div>
-          </form>
-    		</div>
-	</div>
+<div>
+	<p class="lead">
+      Share this link so others can join: <a :href="pageUrl">{{ pageUrl }}</a>
+    </p>
+    <hr><br>
+    <div class="card">
+      <div class="card-body">
+		<form v-on:submit.prevent="addMessage">
+		<div class="form-group">
+		    <textarea class="form-control" id="chat-log" cols="100" rows="10" readonly></textarea><br/>
+		    <label for="chat-log">Enter text</label>
+		    <input class="form-control" type="text" v-model="message"/><br/>
+		    <button v-on:click="addMessage" class="btn btn-block btn-primary">Enter</button>
+		 </div>
+		</form>
+      </div>
+  	</div>
+    
 </div>
 </template>
 

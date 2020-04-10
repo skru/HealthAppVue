@@ -1,8 +1,10 @@
 <template>
-  <div class="container">
-    <h2 class="text-center">Update Password</h2>
-    <div class="row">
-      <div class="col-sm-6 offset-sm-3 text-left">
+  <div><p class="lead">
+      Update your account information.
+    </p>
+    <hr><br>
+    <div class="card">
+      <div class="card-body">
         <div class="alert alert-danger" v-if="errors.non_field_errors">
             {{ errors.non_field_errors[0] }}
         </div>
@@ -23,6 +25,7 @@
         <button v-on:click="updatePassword" class="btn btn-block btn-primary">Update Password</button>
       </div>
     </div>
+  
   </div>
 </template>
 

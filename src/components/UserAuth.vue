@@ -1,8 +1,12 @@
 <template>
-  <div class="container">
-    <h2 class="text-center">Account</h2>
-    <div class="row">
-      <div class="col-sm-6 offset-sm-3">
+  <div>
+    <p class="lead">
+      Sign in using your credentials or sign up to create an account
+    </p>
+    <hr><br>
+
+    <div class="card">
+      <div class="card-body">
         <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
           <li class="nav-item">
             <a
@@ -39,6 +43,7 @@
             aria-labelledby="signin-tab"
           >
             <form class="text-left" @submit.prevent="signUp">
+              <br>
                <div class="alert alert-danger" v-if="errors.non_field_errors">
                   {{ errors.non_field_errors[0] }}
               </div>
@@ -66,6 +71,7 @@
                       {{ errors.password[0] }}
                   </div>
               </div>
+              <br>
               <button type="submit" class="btn btn-block btn-primary">
                 Sign up
               </button>
@@ -78,6 +84,7 @@
             aria-labelledby="signin-tab"
           >
             <form class="text-left" @submit.prevent="signIn">
+              <br>
               <div class="alert alert-danger" v-if="errors.non_field_errors">
                   {{ errors.non_field_errors[0] }}
               </div>
@@ -89,6 +96,7 @@
                 <label for="password">Password</label>
                   <input v-model="password" type="password" class="form-control" id="password" placeholder="Password" required>
               </div>
+              <br>
               <button type="submit" class="btn btn-block btn-primary">
                 Sign in
               </button>
@@ -97,6 +105,8 @@
         </div>
       </div>
     </div>
+        
+   
   </div>
 </template>
 

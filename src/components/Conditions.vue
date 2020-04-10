@@ -1,9 +1,24 @@
 <template>
-  <div class="container">
-    <h2 class="text-center">Conditions</h2>
-    <p>NHS text</p>
-    <div class="row">
-      <div class="col-sm-6 offset-sm-3">
+  <div>
+    <p class="lead">
+      Search for information on common health conditions and symptoms.
+    </p>
+    <hr><br>
+    <div class="card">
+      <div class="card-body">
+         <div class="row">
+          <div class="col-md-6">  
+            <p>All data is provided by the NHS.</p>
+          </div>
+          <div class="col-md-6">  
+            <img src="img/nhs/nhs-attribution.jpg"  class="img-fluid" alt="NHS attribution image">
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="card">
+      <div class="card-body">
         <div class="alert alert-danger" v-if="errors.non_field_errors">
             {{ errors.non_field_errors[0] }}
         </div>
@@ -28,6 +43,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
