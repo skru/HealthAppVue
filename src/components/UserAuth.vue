@@ -149,7 +149,7 @@ export default {
         .post(SETTINGS.http + SETTINGS.domain + "/api/auth/token/login/", credentials)
         .then(function (response) {
           axios.defaults.headers.common['Authorization'] = "Token " + response.data.auth_token; //set auth header
-          console.log(response.data)
+          //console.log(response.data)
           //self.$store.commit('setAuthToken', response.data.auth_token)
           //self.$store.commit('setUsername', self.username)
 
@@ -163,7 +163,7 @@ export default {
         .catch(function (error) {
           if (error.response) {
             self.$data.errors = error.response.data
-            console.log(error.response)
+            //console.log(error.response)
           } 
         });
     }

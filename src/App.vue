@@ -89,7 +89,7 @@ import { SETTINGS } from "@/deploy_vars.js"
 const axios = require('axios');
 
 function getConditionsApi(self){
-  console.log("getting conditions")
+  //console.log("getting conditions")
   axios
       .get(SETTINGS.http + SETTINGS.domain + "/api/conditions/", self.$data)
       .then(function (response) {
@@ -101,14 +101,14 @@ function getConditionsApi(self){
 }
 
 function setConditionsCache(data){
-  console.log("setting cache conditions", JSON.stringify(data))
+  //console.log("setting cache conditions", JSON.stringify(data))
   localStorage.setItem('conditions', JSON.stringify(data));
 }
 
 function getConditionsCache(){
-  console.log("getting cache conditions")
+  //console.log("getting cache conditions")
   let conditions = localStorage.getItem('conditions');
-  console.log("get cache conditions conditions")
+  //console.log("get cache conditions conditions")
   if (conditions) {
     return true;
   } else {
@@ -143,7 +143,7 @@ export default {
 
     
     if (getConditionsCache()) {
-      console.log("conditions in cache. set to store")
+      //console.log("conditions in cache. set to store")
     } else {
       getConditionsApi(self);
     }
