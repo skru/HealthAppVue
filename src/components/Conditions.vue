@@ -54,11 +54,13 @@ export default {
       search_query: "",
       search_results: [],
       errors: "",
+      conditions: JSON.parse(localStorage.getItem('conditions'))
     };
   },
   methods: {
     textSearch() {
-      this.$search(this.search_query, this.$store.getters.getConditionsData, { keys: ['title'] }).then(result => {
+      console.log(this.conditions)
+      this.$search(this.search_query, this.conditions, { keys: ['title'] }).then(result => {
         this.search_results = result
       })
     },

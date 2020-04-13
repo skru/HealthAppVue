@@ -113,14 +113,7 @@
 <script>
 import { SETTINGS } from "@/deploy_vars.js"
 const axios = require('axios');
-// const $ = window.jQuery // JQuery
-// //axios.defaults.xsrfCookieName = 'csrftoken'
-// //axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
-// $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-//   e.target // newly activated tab
-//   e.relatedTarget // previous active tab
-//   console.log("TAB")
-// })
+
 export default {
 
   data() {
@@ -156,13 +149,21 @@ export default {
         .post(SETTINGS.http + SETTINGS.domain + "/api/auth/token/login/", credentials)
         .then(function (response) {
           axios.defaults.headers.common['Authorization'] = "Token " + response.data.auth_token; //set auth header
-          self.$store.commit('setAuthToken', response.data.auth_token)
+          console.log(response.data)
+          //self.$store.commit('setAuthToken', response.data.auth_token)
+          //self.$store.commit('setUsername', self.username)
+
+          sessionStorage.setItem('authToken', response.data.auth_token)
+          sessionStorage.setItem('username', self.username)
+
+
           self.$router.push("/chat");
           self.$toasted.success('Successfully signed in')
         })
         .catch(function (error) {
           if (error.response) {
             self.$data.errors = error.response.data
+            console.log(error.response)
           } 
         });
     }

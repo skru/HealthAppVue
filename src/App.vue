@@ -1,78 +1,86 @@
 <template>
   <div id="app" >
-    <nav class="navbar navbar-expand-sm fixed-top navbar-dark nav-background">
-              <div class="container">
-                <router-link to="/" class="nav-logo">
-                  <img src="@/assets/logo.png" height="50" class="d-inline-block align-middle" alt="Procative Healthcare logo">
-                  <span id="tagline"> Proactive Healthcare</span>
-                </router-link>
-                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar1">
-                      <span class="navbar-toggler-icon"></span>
-                  </button>
-                  <div class="collapse navbar-collapse text-center" id="navbar1">
-                      <ul class="navbar-nav nav ml-auto">
-                          <li class="nav-item">
-                            <router-link to="/about" class="nav-link nav-text ">About</router-link>
-                          </li>
-                          <li class="nav-item">
-                              <router-link to="/conditions" class="nav-link nav-text ">Conditions</router-link>
-                          </li>
-                          <li class="nav-item">
-                              <router-link to="/chat" class="nav-link nav-text  text-truncate">Your&nbsp;Practitioner</router-link>
-                          </li>
-                        </ul>
-                          <span v-if="!isAuthed">
-                            <ul class="navbar-nav nav ml-auto">
-                              <li class="nav-item">
-                                  <router-link to="/auth" class="nav-link nav-text ">Login</router-link>
-                              </li>
-                            </ul>
-                          </span>
-                          <span v-else>
-                            <ul class="navbar-nav nav ml-auto">
-                              <li class="nav-item">
-                                  <router-link to="/account" class="nav-link nav-text ">Account</router-link>
-                              </li>
-                              <li class="nav-item">
-                                  <router-link to="/logout" class="nav-link nav-text ">Logout</router-link>
-                              </li>
-                            </ul>
-                          </span>
-                    
-                  </div>
-              </div>
-          </nav>
-        <main id="app-content" class="container">
-          <div class="row">
-            <div class="col-md-8">
-              <h1 class="display-4">{{ $route.name }}</h1>
-
-              <router-view />
-            </div>
-            <div class="col-md-4">
-              
-                  <span v-if="isAuthed">
-                    <div class="card" style="width: 18rem;">
-                      <div class="card-body">
-                        <h5 class="card-title">Signed in as</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">[[username]]</h6>
-                        <p class="card-text"></p>
-                      </div>
-                    </div>
-                  </span>
-               
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark nav-background">
+      <div class="container">
+        <router-link to="/" class="nav-logo" data-toggle="collapse" data-target=".navbar-collapse.show">
+          <img src="@/assets/logo.png" height="50" class="d-inline-block align-middle" alt="Procative Healthcare logo">
+          <span id="tagline" class="d-none d-lg-inline">&nbsp;Proactive Healthcare</span>
+        </router-link>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar1">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse text-center" id="navbar1">
+            <ul class="navbar-nav nav ml-auto">
+              <li class="nav-item">
+                <router-link to="/about" class="nav-link nav-text" data-toggle="collapse" data-target=".navbar-collapse.show">About</router-link>
+              </li>
+              <li class="nav-item">
+                  <router-link to="/conditions" class="nav-link nav-text" data-toggle="collapse" data-target=".navbar-collapse.show">Conditions</router-link>
+              </li>
+              <li class="nav-item">
+                  <router-link to="/chat" class="nav-link nav-text  text-truncate">Your&nbsp;Practitioner</router-link>
+              </li>
+            </ul>
+            <span v-if="!isAuthed">
+              <ul class="navbar-nav nav ml-auto">
+                <li class="nav-item">
+                    <router-link to="/auth" class="nav-link nav-text" data-toggle="collapse" data-target=".navbar-collapse.show">Login</router-link>
+                </li>
+              </ul>
+            </span>
+            <span v-else>
+              <ul class="navbar-nav nav ml-auto">
+                <li class="nav-item">
+                    <router-link to="/account" class="nav-link nav-text" data-toggle="collapse" data-target=".navbar-collapse.show">Account</router-link>
+                </li>
+                <li class="nav-item">
+                    <router-link to="/logout" class="nav-link nav-text" data-toggle="collapse" data-target=".navbar-collapse.show">Logout</router-link>
+                </li>
+              </ul>
+            </span>
+          </div>
+      </div>
+    </nav>
+  <main id="app-content" class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <h1 class="display-4">{{ $route.name }}</h1>
+        <router-view />
+      </div>
+      <div class="col-md-4">
+        <span v-if="isAuthed">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Signed in as: {{ username }}</h4>
             </div>
           </div>
-          
-        </main>
-
-        <footer>
-            <nav class="navbar fixed-bottom navbar-light bg-light">
-              <p class="pull-left">Copyright Joseph T Mohan 2020.</p>
-              <p class="pull-right">Contact: jm1179@canterbury.ac.uk</p>
-            </nav>
-        </footer>
-  
+          <br>
+        </span>
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Important Contacts</h4>
+            <span class="card-text">
+              <p>If you think it's an emergency:</p>
+              <ul>
+                <li><a href="tel:999">call 999</a></li>
+              </ul>
+              <p>If you need help now, but it's not an emergency:</p>
+              <ul>
+                <li>go to 111.nhs.uk or <a href="tel:111">call 111</a></li>
+              </ul>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <br><br>
+  <footer>
+      <nav class="navbar fixed-bottom navbar-light bg-light">
+        <p class="pull-left">Copyright Joseph T Mohan 2020.</p>
+        <p class="pull-right">Contact: jm1179@canterbury.ac.uk</p>
+      </nav>
+  </footer>
 </div>
 </template>
 
@@ -80,28 +88,65 @@
 import { SETTINGS } from "@/deploy_vars.js"
 const axios = require('axios');
 
-export default {
-
-  data() {
-    return {
-      isAuthed: this.$store.getters.getAuthToken,
-    };
-  },
-
-  updated() {
-      this.isAuthed = this.$store.getters.getAuthToken;
-  },
-
-  created () {
-    let self = this;
-    axios
+function getConditionsApi(self){
+  console.log("getting conditions")
+  axios
       .get(SETTINGS.http + SETTINGS.domain + "/api/conditions/", self.$data)
       .then(function (response) {
-        self.$store.commit('setConditionsData', response.data)
+        setConditionsCache(response.data);
       })
       // .catch(function (error) {
 
       // });
+}
+
+function setConditionsCache(data){
+  console.log("setting cache conditions", JSON.stringify(data))
+  localStorage.setItem('conditions', JSON.stringify(data));
+}
+
+function getConditionsCache(){
+  console.log("getting cache conditions")
+  let conditions = localStorage.getItem('conditions');
+  console.log("get cache conditions conditions")
+  if (conditions) {
+    return true;
+  } else {
+    return null;
+  }
+}
+
+export default {
+
+  data() {
+    return {
+      isAuthed: null,
+      username: this.$store.getters.getUsername,
+    };
+  },
+
+  updated() {
+    if (sessionStorage.getItem('authToken') !== null) {
+      this.isAuthed = true;
+      this.username = sessionStorage.getItem('username');
+
+    } else {
+      this.isAuthed = null;
+      this.username = "";
+    }
+
+  },
+
+  created () {
+    let self = this;
+    
+
+    
+    if (getConditionsCache()) {
+      console.log("conditions in cache. set to store")
+    } else {
+      getConditionsApi(self);
+    }
   }
 };
 </script>
@@ -134,9 +179,10 @@ export default {
 }
 
 #tagline {
-  font-size: 1.3rem;
+  font-size: 1rem;
   color: white !important;
   border-radius: 12px;
+  font-weight: 100;
 }
 
 .nav-text {
@@ -166,7 +212,10 @@ export default {
   height: 34px;
 }
 
+.contact-image {
+  padding: 30px;
 
+}
 
 
 </style>

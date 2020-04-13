@@ -15,21 +15,29 @@ Vue.use(VueRouter);
 
 function checkAuthBeforePage(to, from, next){
   // Check user is authorised (has token) redirect to login if fails
-  try {
-    var hasPermission =  store.state.auth_token;
-    if (hasPermission !== "") {
-      next()
-    } else {
-      router.app.$root.$toasted.info('Login Required');
-      next({
-        name: "Login" // back to safety route //
-      })
-    }
-  } catch (e) {
+   if (sessionStorage.getItem('authToken') !== null || to.path === '/auth') {
+    next()
+  } else {
+    router.app.$root.$toasted.info('Login Required');
     next({
       name: "Login" // back to safety route //
     })
   }
+  // try {
+  //   var hasPermission =  store.state.auth_token;
+  //   if (hasPermission !== "") {
+  //     next()
+  //   } else {
+  //     router.app.$root.$toasted.info('Login Required');
+  //     next({
+  //       name: "Login" // back to safety route //
+  //     })
+  //   }
+  // } catch (e) {
+  //   next({
+  //     name: "Login" // back to safety route //
+  //   })
+  // }
 }
 
 const routes = [
