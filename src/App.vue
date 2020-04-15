@@ -51,7 +51,14 @@
         <span v-if="isAuthed">
           <div class="card">
             <div class="card-body">
-              <h4 class="card-title">Signed in as: {{ username }}</h4>
+              <h4 class="card-title">Signed in as: </h4>
+              <span class="card-text">
+                <p>
+                  <span v-if="isPractitioner">Practitioner </span>
+                  <span v-else>Patient </span>
+                  {{ username }}
+                </p>
+              </span>
             </div>
           </div>
           <br>
@@ -89,7 +96,6 @@ import { SETTINGS } from "@/deploy_vars.js"
 const axios = require('axios');
 
 function getConditionsApi(self){
-  //console.log("getting conditions")
   axios
       .get(SETTINGS.http + SETTINGS.domain + "/api/conditions/", self.$data)
       .then(function (response) {
@@ -116,32 +122,36 @@ function getConditionsCache(){
   }
 }
 
+function setAuth(self){
+  if (sessionStorage.getItem('authToken') !== null) {
+    self.isAuthed = true;
+    self.username = sessionStorage.getItem('username');
+    self.isPractitioner = JSON.parse(sessionStorage.getItem('isPractitioner'));
+  } else {
+    self.isAuthed = null;
+    self.username = "";
+    self.isPractitioner = "";
+  }
+}
+
 export default {
 
   data() {
     return {
       isAuthed: null,
-      username: this.$store.getters.getUsername,
+      username: "",
+      isPractitioner: false,
     };
   },
 
   updated() {
-    if (sessionStorage.getItem('authToken') !== null) {
-      this.isAuthed = true;
-      this.username = sessionStorage.getItem('username');
-
-    } else {
-      this.isAuthed = null;
-      this.username = "";
-    }
-
+    setAuth(this);
   },
 
   created () {
-    let self = this;
-    
+    setAuth(this);
 
-    
+    let self = this;
     if (getConditionsCache()) {
       //console.log("conditions in cache. set to store")
     } else {

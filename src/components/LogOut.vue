@@ -6,6 +6,7 @@ function logoutAuthed(self){
   axios.defaults.headers.common['Authorization'] = ""; //remove auth header
   sessionStorage.removeItem('authToken');
   sessionStorage.removeItem('username');
+  sessionStorage.removeItem('isPractitioner');
   self.$toasted.success('Successfully Logged Out');
   self.$router.push("/");
 }

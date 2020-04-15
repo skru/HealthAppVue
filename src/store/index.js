@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     auth_token: "",
     username: "",
+    is_practitioner: false,
     conditions_data: []
   },
   
@@ -16,6 +17,9 @@ export default new Vuex.Store({
     },
     setUsername: (state, payload) => {
       state.username = payload
+    },
+    setIsPractitioner: (state, payload) => {
+      state.is_practitioner = payload
     },
     setConditionsData: (state, payload) => {
       state.conditions_data = payload
@@ -27,6 +31,9 @@ export default new Vuex.Store({
     },
     getUsername: state => {
       return state.username;
+    },
+    getIsPractitioner: state => {
+      return state.is_practitioner;
     },
     getConditionsData: state => {
       return state.conditions_data;

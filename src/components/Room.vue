@@ -41,8 +41,9 @@
 	      return {
 	        message: "",
 	        chatLog: "",
+	        username: sessionStorage.getItem('username'),
 	        roomId: this.$route.params.roomId,
-          pageUrl: SETTINGS.domain + this.$route.path,
+          	pageUrl: SETTINGS.domain + this.$route.path,
 	      };
 	    },
 
@@ -88,7 +89,11 @@
 		methods: {
 			addMessage: function () {
 				chatSocket.send(JSON.stringify({
-				    'message': this.message
+					"type": "add_message",
+					"chat_id": this.roomId,
+				    "message": this.message,
+				    "command": "add_message",
+				    "author": this.username,
 				}));
 				this.message = '';
 			}

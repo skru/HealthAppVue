@@ -61,6 +61,23 @@
                       {{ errors.username[0] }}
                   </div>
               </div>
+
+              <div class="form-group">
+                <label for="practitioners">Your Practitioner</label>
+                <select v-model="practitionerSelected" class="form-control" id="practitioners" required>
+                  <option disabled value="" class="option-select">Please select one</option>
+                  <option v-for="practitioner in practitionerArray" 
+                    v-bind:value="practitioner.value" 
+                    v-bind:key="practitioner.text"
+                    class="option-select">
+                    {{ practitioner.value }}
+                  </option>
+                </select>
+                <div class="alert alert-danger" v-if="errors.username != null">
+                      {{ errors.practitionerArray[0] }}
+                  </div>
+              </div>
+
               <div class="form-group">
                 <label for="password">Password</label>
                   <input v-model="password" type="password" class="form-control" id="password" required>
@@ -105,8 +122,6 @@
         </div>
       </div>
     </div>
-        
-   
   </div>
 </template>
 
@@ -122,24 +137,46 @@ export default {
       username: "",
       password: "",
       errors: "",
+      practitionerSelected: '',
+      practitionerArray: []
     };
   },
+
+  created () {
+    let self = this;
+    axios
+      .get(SETTINGS.http + SETTINGS.domain + "/api/practitioners/", self.$data)
+      .then(function (response) {
+        for (var index in response.data) {
+          let username = response.data[index].username;
+          self.practitionerArray.push({ text: username, value: username});
+        }
+      })
+      .catch(function (error) {
+        if (error.response) {
+          if (error.response.data){
+            self.$data.errors = error.response.data
+          }
+        } 
+      });
+  },
+
   methods: {
     signUp() {
       let self = this;
       axios
-          .post(SETTINGS.http + SETTINGS.domain + "/api/auth/users/", self.$data)
-          .then(function (response) {
-            self.$toasted.success('Account created')
-            self.signIn();
-          })
-          .catch(function (error) {
-            if (error.response) {
-              if (error.response.data){
-                self.$data.errors = error.response.data
-              }
-            } 
-          });
+        .post(SETTINGS.http + SETTINGS.domain + "/api/auth/users/", self.$data)
+        .then(function (response) {
+          self.$toasted.success('Account created')
+          self.signIn();
+        })
+        .catch(function (error) {
+          if (error.response) {
+            if (error.response.data){
+              self.$data.errors = error.response.data
+            }
+          } 
+        });
 
     },
     signIn() {
@@ -148,25 +185,27 @@ export default {
       axios
         .post(SETTINGS.http + SETTINGS.domain + "/api/auth/token/login/", credentials)
         .then(function (response) {
+
           axios.defaults.headers.common['Authorization'] = "Token " + response.data.auth_token; //set auth header
-          //console.log(response.data)
-          //self.$store.commit('setAuthToken', response.data.auth_token)
-          //self.$store.commit('setUsername', self.username)
-
-          sessionStorage.setItem('authToken', response.data.auth_token)
-          sessionStorage.setItem('username', self.username)
-
+          sessionStorage.setItem('isPractitioner',JSON.stringify(response.data.is_practitioner));
+          sessionStorage.setItem('authToken', response.data.auth_token);
+          sessionStorage.setItem('username', self.username);
 
           self.$router.push("/chat");
-          self.$toasted.success('Successfully signed in')
+          self.$toasted.success('Successfully signed in');
         })
         .catch(function (error) {
           if (error.response) {
             self.$data.errors = error.response.data
-            //console.log(error.response)
           } 
         });
-    }
+    },
+
+    
   }
 };
 </script>
+
+<style>
+  /*.option-select {}*/
+</style>
