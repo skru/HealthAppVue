@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     textSearch() {
-      console.log(this.conditions)
+      //console.log(this.conditions)
       this.$search(this.search_query, this.conditions, { keys: ['title'] }).then(result => {
         this.search_results = result
       })
