@@ -16,7 +16,7 @@
             class="form-control"
             required
           /><br />
-          <button type="submit" class="btn btn-block btn-primary">
+          <button type="submit" class="btn btn-block btn-success">
             Enter
           </button>
         </form>

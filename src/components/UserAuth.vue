@@ -64,13 +64,13 @@
 
               <div class="form-group">
                 <label for="practitioners">Your Practitioner</label>
-                <select v-model="practitionerSelected" class="form-control" id="practitioners" required>
+                <select v-model="practitioner" class="form-control" id="practitioners" required>
                   <option disabled value="" class="option-select">Please select one</option>
-                  <option v-for="practitioner in practitionerArray" 
-                    v-bind:value="practitioner.value" 
-                    v-bind:key="practitioner.text"
+                  <option v-for="pract in practitionerArray" 
+                    v-bind:value="pract.value" 
+                    v-bind:key="pract.text"
                     class="option-select">
-                    {{ practitioner.value }}
+                    {{ pract.value }}
                   </option>
                 </select>
                 <div class="alert alert-danger" v-if="errors.username != null">
@@ -89,7 +89,7 @@
                   </div>
               </div>
               <br>
-              <button type="submit" class="btn btn-block btn-primary">
+              <button type="submit" class="btn btn-block btn-success">
                 Sign up
               </button>
             </form>
@@ -114,7 +114,7 @@
                   <input v-model="password" type="password" class="form-control" id="password" placeholder="Password" required>
               </div>
               <br>
-              <button type="submit" class="btn btn-block btn-primary">
+              <button type="submit" class="btn btn-block btn-success">
                 Sign in
               </button>
             </form>
@@ -137,7 +137,7 @@ export default {
       username: "",
       password: "",
       errors: "",
-      practitionerSelected: '',
+      practitioner: '',
       practitionerArray: []
     };
   },
@@ -145,7 +145,7 @@ export default {
   created () {
     let self = this;
     axios
-      .get(SETTINGS.http + SETTINGS.domain + "/api/practitioners/", self.$data)
+      .get(SETTINGS.http + SETTINGS.domain + "/api/practitioners/")
       .then(function (response) {
         for (var index in response.data) {
           let username = response.data[index].username;
@@ -181,7 +181,12 @@ export default {
     },
     signIn() {
       let self = this;
-      const credentials = { username: this.username, password: this.password};
+      const credentials = {
+        username: this.username,
+        password: this.password,
+        practitioner: this.practitioner
+      };
+
       axios
         .post(SETTINGS.http + SETTINGS.domain + "/api/auth/token/login/", credentials)
         .then(function (response) {
@@ -200,8 +205,6 @@ export default {
           } 
         });
     },
-
-    
   }
 };
 </script>

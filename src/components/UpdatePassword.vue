@@ -22,7 +22,7 @@
                 {{ errors.new_password[0]}}
             </div>
         </div>
-        <button v-on:click="updatePassword" class="btn btn-block btn-primary">Update Password</button>
+        <button v-on:click="updatePassword" class="btn btn-block btn-success">Update Password</button>
       </div>
     </div>
   

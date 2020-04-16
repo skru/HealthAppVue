@@ -26,7 +26,7 @@
           <label for="search_query">Search Health Conditions/Symptoms</label>
             <input v-model="search_query" type="text" class="form-control" id="search_query" placeholder="Sore throat" required>
         </div>
-        <button v-on:click="textSearch" class="btn btn-block btn-primary">
+        <button v-on:click="textSearch" class="btn btn-block btn-success">
           Search
         </button>
         <div v-for="condition in search_results" :key="condition.title">
@@ -37,7 +37,7 @@
             </div>
             <div class="card-body">
               <p class="card-text">{{ condition.description }}</p>
-              <a :href="condition.url" class="btn btn-primary">Read more via the NHS</a>
+              <a :href="condition.url" class="btn btn-success">Read more via the NHS</a>
             </div>
           </div>
         </div>

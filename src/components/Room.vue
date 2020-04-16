@@ -12,7 +12,7 @@
 		    <textarea class="form-control" id="chat-log" cols="100" rows="10" readonly></textarea><br/>
 		    <label for="chat-log">Enter text</label>
 		    <input class="form-control" type="text" v-model="message"/><br/>
-		    <button v-on:click="addMessage" class="btn btn-block btn-primary">Enter</button>
+		    <button v-on:click="addMessage" class="btn btn-block btn-success">Enter</button>
 		 </div>
 		</form>
       </div>
