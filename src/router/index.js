@@ -69,7 +69,7 @@ const routes = [
 
   {
     path: "/chat",
-    name: "Your Practitioner",
+    name: "Online Appointments",
     component: ChatRooms,
     beforeEnter(to, from, next) {
       checkAuthBeforePage(to, from, next)

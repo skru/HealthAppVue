@@ -144,6 +144,7 @@ export default {
 
   created () {
     let self = this;
+    // get all practitioners to fill select field
     axios
       .get(SETTINGS.http + SETTINGS.domain + "/api/practitioners/")
       .then(function (response) {

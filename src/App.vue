@@ -18,7 +18,11 @@
                   <router-link to="/conditions" class="nav-link nav-text" data-toggle="collapse" data-target=".navbar-collapse.show">Conditions</router-link>
               </li>
               <li class="nav-item">
-                  <router-link to="/chat" class="nav-link nav-text  text-truncate">Your&nbsp;Practitioner</router-link>
+                  <router-link to="/chat" class="nav-link nav-text  text-truncate">
+                    Your&nbsp;
+                    <span v-if="!isPractitioner">Practitioners</span>
+                    <span v-else>Patients</span>
+                  </router-link>
               </li>
             </ul>
             <span v-if="!isAuthed">

@@ -6,14 +6,19 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     auth_token: "",
+    is_authed: false,
     username: "",
-    is_practitioner: false,
-    conditions_data: []
+    is_practitioner: "",
+    conditions_data: [],
+    //participants_data: [],
   },
   
   mutations: {
     setAuthToken: (state, payload) => {
       state.auth_token = payload
+    },
+    setIsAuthed: (state, payload) => {
+      state.is_authed = payload
     },
     setUsername: (state, payload) => {
       state.username = payload
@@ -24,10 +29,16 @@ export default new Vuex.Store({
     setConditionsData: (state, payload) => {
       state.conditions_data = payload
     }
+    // setParticipantsData: (state, payload) => {
+    //   state.participants_data = payload
+    // }
   },
   getters: {
     getAuthToken: state => {
       return state.auth_token;
+    },
+    getIsAuthed: state => {
+      return state.is_authed;
     },
     getUsername: state => {
       return state.username;
@@ -38,5 +49,8 @@ export default new Vuex.Store({
     getConditionsData: state => {
       return state.conditions_data;
     }
+    // getParticipantsData: state => {
+    //   return state.cparticipants_data;
+    // }
   }
 });

@@ -1,7 +1,6 @@
 	<template>
 <div>
 	<p class="lead">
-      Share this link so others can join: <a :href="pageUrl">{{ pageUrl }}</a>
     </p>
     <hr><br>
     <div class="card">
