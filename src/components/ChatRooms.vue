@@ -53,7 +53,6 @@ export default {
     axios
       .get(SETTINGS.http + SETTINGS.domain + "/api/chats/" + self.$data.username + "/")
       .then(function (response) {
-        console.log(response.data)
         self.$data.participants = response.data
       })
       .catch(function (error) {
