@@ -12,6 +12,7 @@
     "core-js": "^3.6.4",
     "es6-promise": "^4.2.8",
     "peerjs": "^1.2.0",
+    "reconnecting-websocket": "^4.4.0",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.11",
     "vue-fuse": "^2.2.1",

@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="lead">
-      {{isPractitioner}}Talk to your 
+      Talk to your 
       <span v-if="!isPractitioner">Practitioners </span>
       <span v-else>Patients </span>
       online using the form below.
@@ -53,7 +53,7 @@ export default {
     axios
       .get(SETTINGS.http + SETTINGS.domain + "/api/chats/" + self.$data.username + "/")
       .then(function (response) {
-        //console.log(response.data)
+        console.log(response.data)
         self.$data.participants = response.data
       })
       .catch(function (error) {

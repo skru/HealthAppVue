@@ -1,27 +1,34 @@
 	<template>
 <div>
 	<p class="lead">
+		Chat using the form below
     </p>
     <hr><br>
-    <div class="card">
-      <div class="card-body">
-		<form v-on:submit.prevent="addMessage">
-		<div class="form-group">
 
-		    <textarea class="form-control" id="chat-log" cols="100" rows="10" readonly></textarea><br/>
-		    <label for="chat-log">Enter text</label>
-		    <input class="form-control" type="text" v-model="message"/><br/>
-		    <button v-on:click="addMessage" class="btn btn-block btn-success">Enter</button>
-		 </div>
-		</form>
-      </div>
-  	</div>
-    
+    <div class="scroll">
+		<span v-for="(line, index) in messages" :key="index" >
+			<div  v-bind:class="{'card':true, 'text-right':(line.author !== username)}">
+			  <div class="card-body">
+			    <p class="card-subtitle mb-2 text-muted">{{line.author_name}} {{line.timestamp}}</p>
+			    <p class="card-text">{{line.message}}</p>
+			  </div>
+			</div>
+	    </span>
+	</div>
+	<br>
+	<div class="form-group">
+	    <label for="chat-log">Enter text</label>
+	    <input class="form-control" type="text" v-model="message"/><br/>
+	    <button v-on:click="addMessage" class="btn btn-block btn-success">Enter</button>
+	 </div>
+
+      
 </div>
 </template>
 
 <script>
   import { SETTINGS } from "@/deploy_vars.js"
+  import ReconnectingWebSocket from 'reconnecting-websocket';
   // import Peer from 'peerjs';
 
 	const $ = window.jQuery;
@@ -43,21 +50,53 @@
 	        username: sessionStorage.getItem('username'),
 	        roomId: this.$route.params.roomId,
           	pageUrl: SETTINGS.domain + this.$route.path,
+          	messages: []
 	      };
 	    },
 
+	    methods: {
+			addMessage: function () {
+				chatSocket.send(JSON.stringify({
+					"type": "add_message",
+					"chat_id": this.roomId,
+				    "message": this.message,
+				    "author": this.username,
+				}));
+				this.message = '';
+			},
+
+			getMessages: function () {
+				chatSocket.send(JSON.stringify({
+					"type": "get_messages",
+					"chat_id": this.roomId,
+				}));
+			}
+		},
+
 	    created(){
-	    	chatSocket = new WebSocket(
-		       SETTINGS.ws + SETTINGS.domain + '/api/ws/chat/' + this.roomId + '/'
+	    	let self = this
+	    	chatSocket = new ReconnectingWebSocket(
+		       SETTINGS.ws + SETTINGS.domain + '/api/ws/chat/' + this.roomId.normalize() + '/'
 		    );  
 	    	chatSocket.onmessage = function(e) {
-		        var data = JSON.parse(e.data);
-		        $('#chat-log').val($('#chat-log').val() + data['message'] + '\n');
+	    		
+		        var messageData = JSON.parse(e.data);
+
+		        if (messageData['message']["type"] === "get_messages"){
+		        	messageData['message']["message"].forEach(function (value) {
+					  self.$data.messages.push(value)
+					}); 
+		        } else if (messageData['message']["type"] === "add_message") {
+		        	self.$data.messages.push(messageData['message'])
+		        }
+		        
 		    };
 
 		    chatSocket.onclose = function() {
 		        //console.error('Chat socket closed unexpectedly');
 		    };
+
+		    this.getMessages();
 
 		    // PEER.JS
 		 //    var peer = new Peer({key: 'lwjd5qra8257b9'});
@@ -85,18 +124,17 @@
 			
 	    },
 
-		methods: {
-			addMessage: function () {
-				chatSocket.send(JSON.stringify({
-					"type": "add_message",
-					"chat_id": this.roomId,
-				    "message": this.message,
-				    "command": "add_message",
-				    "author": this.username,
-				}));
-				this.message = '';
-			}
-		},
+		
 	}
  
 </script>
+
+<style scoped>
+.scroll {
+    max-height: 90vh;
+    overflow-y: scroll;
+}
+.card-subtitle {
+	font-size: 0.8rem;
+}
+</style>
