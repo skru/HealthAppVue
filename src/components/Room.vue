@@ -4,10 +4,9 @@
 		Chat using the form below
     </p>
     <hr><br>
-
     <div class="scroll">
 		<span v-for="(line, index) in messages" :key="index" >
-			<div  v-bind:class="{'card':true, 'text-right':(line.author !== username)}">
+			<div class="" v-bind:class="{'text-right':(line.author !== username)}">
 			  <div class="card-body">
 			    <p class="card-subtitle mb-2 text-muted">{{line.author_name}} {{line.timestamp}}</p>
 			    <p class="card-text">{{line.message}}</p>
@@ -16,11 +15,17 @@
 	    </span>
 	</div>
 	<br>
-	<div class="form-group">
+	<form @submit.prevent="addMessage" class="form-group">
 	    <label for="chat-log">Enter text</label>
-	    <input class="form-control" type="text" v-model="message"/><br/>
-	    <button v-on:click="addMessage" class="btn btn-block btn-success">Enter</button>
-	 </div>
+	    <input class="form-control" ref="message" type="text" v-model="message" required/><br/>
+	    <button type="submit" class="btn btn-block btn-success">Enter</button>
+	 </form>
+<!-- 
+	 <form @submit.prevent="peerConnect">
+      <textarea v-model="incoming"></textarea>
+      <button v-on:click="addMessage">submit</button>
+    </form>
+    <div >{{outgoing}}</div> -->
 
       
 </div>
@@ -29,17 +34,31 @@
 <script>
   import { SETTINGS } from "@/deploy_vars.js"
   import ReconnectingWebSocket from 'reconnecting-websocket';
-  // import Peer from 'peerjs';
-
-	const $ = window.jQuery;
+ //  import SimplePeer from 'simple-peer';
+	//const $ = window.jQuery;
 	let chatSocket = null;
-
-	// navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
-
-	//   let peerClient;
-	//   let currentPeerConnection;
-	//   let localMediaStream;
-	  //let videoMyself = document.querySelector('#js-video-myself');	
+ //      const p = new SimplePeer({
+ //        initiator: location.hash === '#1',
+ //        trickle: false
+ //      })
+ //      console.log(p)
+ //      p.on('error', err => console.log('error', err))
+ //      p.on('signal', data => {
+ //        console.log('SIGNAL', JSON.stringify(data))
+ //        //document.querySelector('#outgoing').textContent = JSON.stringify(data)
+ //        this.outgoing = JSON.stringify(data)
+ //      })
+ //      // document.querySelector("#peer-form").addEventListener('submit', ev => {
+ //      //   ev.preventDefault()
+ //      //   p.signal(JSON.parse(document.querySelector('#incoming').value))
+ //      // })
+ //      p.on('connect', () => {
+ //        console.log('CONNECT')
+ //        p.send('whatever' + Math.random())
+ //      })
+ //      p.on('data', data => {
+ //        console.log('data: ' + data)
+ //      })
 
 	export default {
 
@@ -50,7 +69,9 @@
 	        username: sessionStorage.getItem('username'),
 	        roomId: this.$route.params.roomId,
           	pageUrl: SETTINGS.domain + this.$route.path,
-          	messages: []
+          	messages: [],
+          	// incoming: "",
+          	// outgoing: "",
 	      };
 	    },
 
@@ -70,7 +91,12 @@
 					"type": "get_messages",
 					"chat_id": this.roomId,
 				}));
-			}
+			},
+
+			// peerConnect: function () {
+			// 	//console.log("TESDT", document.querySelector('#incoming').value)
+			// 	p.signal(JSON.parse(this.incoming))
+			// },
 		},
 
 	    created(){
@@ -85,10 +111,13 @@
 		        if (messageData['message']["type"] === "get_messages"){
 		        	messageData['message']["message"].forEach(function (value) {
 					  self.$data.messages.push(value)
+					  
 					}); 
 		        } else if (messageData['message']["type"] === "add_message") {
 		        	self.$data.messages.push(messageData['message'])
 		        }
+
+
 		        
 		    };
 
@@ -97,40 +126,13 @@
 		    };
 
 		    this.getMessages();
-
-		    // PEER.JS
-		 //    var peer = new Peer({key: 'lwjd5qra8257b9'});
-		 // //    peer.on('open', function(id) {
-			// //   console.log('My peer ID is: ' + id);
-			// // });
-			// var conn = peer.connect('dest-peer-id');
-			// conn.on('open', function() {
-			//   // Receive messages
-			//   conn.on('data', function(data) {
-			//     console.log('Received', data);
-			//   });
-
-			//   // Send messages
-			//   conn.send('Hello!');
-			// });
-
-			// navigator.getUserMedia({video: true, audio: true}, function(stream) {
-		 //      document.querySelector('#js-video-myself').src = URL.createObjectURL(stream);
-		 //      document.querySelector('#js-video-myself').play();
-		 //      localMediaStream = stream;
-		 //    });
-
-			// var call = peer.call('dest-peer-id', localMediaStream);
-			
 	    },
-
-		
 	}
- 
 </script>
 
 <style scoped>
 .scroll {
+	display: block;
     max-height: 90vh;
     overflow-y: scroll;
 }

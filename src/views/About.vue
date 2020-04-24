@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="lead">
-      A demonstration of PWA and websockets in use.
+      A University project demonstrating the use of a Progressive Web App frontend and REST API backend.
     </p>
     <hr><br>
     <div class="card">

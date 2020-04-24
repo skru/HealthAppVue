@@ -196,6 +196,7 @@ export default {
           sessionStorage.setItem('isPractitioner',JSON.stringify(response.data.is_practitioner));
           sessionStorage.setItem('authToken', response.data.auth_token);
           sessionStorage.setItem('username', self.username);
+          sessionStorage.setItem('full_name', response.data.full_name);
 
           self.$router.push("/chat");
           self.$toasted.success('Successfully signed in');

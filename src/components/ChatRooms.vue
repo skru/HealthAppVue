@@ -22,6 +22,7 @@
           <button v-on:click="selectRoom(line.chat_uuid)" class="btn btn-block btn-success">start</button>
         </div>
       </div>
+      <br>
     </div>
   </div>
 </template>
@@ -36,7 +37,7 @@ export default {
       room: "",
       contactName: "",
       contactUsername: "",
-      username: [sessionStorage.getItem('username')],
+      username: sessionStorage.getItem('username'),
       participants: [],
       isPractitioner: JSON.parse(sessionStorage.getItem('isPractitioner')),
 

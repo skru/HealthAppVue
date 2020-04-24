@@ -19,7 +19,7 @@
    		
 	  <div class="card">
 	  	<router-link to="/conditions" class="menu-router-link">
-	    <img class="card-img-top img-fluid" src="img/stethoscope.png" alt="stethoscope">
+	    <!-- <img class="card-img-top img-fluid" src="img/stethoscope.png" alt="stethoscope"> -->
 	    <div class="card-body">
 	      <h5 class="card-title">Your Health</h5>
 	      <hr>
@@ -33,7 +33,7 @@
 
 	  <div class="card">
 	  	<router-link to="/chat" class="menu-router-link">
-	    <img class="card-img-top img-fluid" src="img/practitioner.png" alt="practitioner">
+	    <!-- <img class="card-img-top img-fluid" src="img/practitioner.png" alt="practitioner"> -->
 	    <div class="card-body">
 	      <h5 class="card-title">Your Practitioner</h5>
 	      <hr>
@@ -43,7 +43,7 @@
 	  </div>
 	  <div class="card">
 	  	<router-link to="/account" class="menu-router-link">
-	    <img class="card-img-top img-fluid" src="img/paperwork.png" alt="paperwork">
+	    <!-- <img class="card-img-top img-fluid" src="img/paperwork.png" alt="paperwork"> -->
 	    <div class="card-body">
 	      <h5 class="card-title">Your Account</h5>
 	      <hr>

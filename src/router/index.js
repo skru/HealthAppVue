@@ -11,6 +11,9 @@ import UpdatePassword from "@/components/UpdatePassword";
 
 import store from "../store/index.js";
 
+import { SETTINGS } from "@/deploy_vars.js"
+const axios = require('axios');
+
 Vue.use(VueRouter);
 
 function checkAuthBeforePage(to, from, next){
@@ -19,29 +22,52 @@ function checkAuthBeforePage(to, from, next){
     next()
   } else {
     router.app.$root.$toasted.info('Login Required');
+    store.commit('setNotification', 'Login required');
+
     next({
       name: "Login" // back to safety route //
     })
   }
-  // try {
-  //   var hasPermission =  store.state.auth_token;
-  //   if (hasPermission !== "") {
-  //     next()
-  //   } else {
-  //     router.app.$root.$toasted.info('Login Required');
-  //     next({
-  //       name: "Login" // back to safety route //
-  //     })
-  //   }
-  // } catch (e) {
-  //   next({
-  //     name: "Login" // back to safety route //
-  //   })
-  // }
+}
+
+function checkChatAuth(to, from, next){
+  // Check user is authorised to access chat url
+   if (sessionStorage.getItem('authToken') !== null || to.path === '/auth') {
+    axios
+      .get(SETTINGS.http + SETTINGS.domain + "/api/chats/" + sessionStorage.getItem('username') + "/")
+      .then(function (response) {
+        response.data.forEach(function (value) {
+          if (value.chat_uuid === to.params.roomId){
+            next();
+          } else {
+            next({
+              name: "/" 
+            })
+
+          }
+        }); 
+      })
+      .catch(function (error) {
+        if (error.response) {
+          if (error.response.data){
+            next({
+              path: "/" // back to safety route //
+            })
+          }
+        } 
+      });
+    
+    
+  } else {
+    router.app.$root.$toasted.info('Login Required');
+    next({
+      name: "Login" // back to safety route //
+    })
+  }
 }
 
 const routes = [
-  { path: '*', component: NotFoundComponent },
+  { path: '*', component: NotFoundComponent, name: '404 not found' },
   {
     path: "/",
     name: "Proactive Healthcare",
@@ -77,10 +103,10 @@ const routes = [
   },
   {
     path: "/chat/:roomId",
-    name: "Room",
+    name: "Online Appointment",
     component: Room,
     beforeEnter(to, from, next) {
-      checkAuthBeforePage(to, from, next)
+      checkChatAuth(to, from, next)
     }
   },
   {

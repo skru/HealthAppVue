@@ -49,7 +49,12 @@
     <div class="row">
       <div class="col-md-8">
         <h1 class="display-4">{{ $route.name }}</h1>
-        <router-view />
+        <transition
+          name="fade"
+          mode="out-in"
+        >
+          <router-view/>
+        </transition>
       </div>
       <div class="col-md-4">
         <span v-if="isAuthed">
@@ -60,7 +65,7 @@
                 <p>
                   <span v-if="isPractitioner">Practitioner </span>
                   <span v-else>Patient </span>
-                  {{ username }}
+                  {{ full_name }}
                 </p>
               </span>
             </div>
@@ -111,14 +116,11 @@ function getConditionsApi(self){
 }
 
 function setConditionsCache(data){
-  //console.log("setting cache conditions", JSON.stringify(data))
   localStorage.setItem('conditions', JSON.stringify(data));
 }
 
 function getConditionsCache(){
-  //console.log("getting cache conditions")
   let conditions = localStorage.getItem('conditions');
-  //console.log("get cache conditions conditions")
   if (conditions) {
     return true;
   } else {
@@ -129,11 +131,12 @@ function getConditionsCache(){
 function setAuth(self){
   if (sessionStorage.getItem('authToken') !== null) {
     self.isAuthed = true;
-    self.username = sessionStorage.getItem('username');
+    self.full_name = sessionStorage.getItem('full_name');
     self.isPractitioner = JSON.parse(sessionStorage.getItem('isPractitioner'));
+    axios.defaults.headers.common['Authorization'] = "Token " + sessionStorage.getItem('authToken');
   } else {
     self.isAuthed = null;
-    self.username = "";
+    self.full_name = "";
     self.isPractitioner = "";
   }
 }
@@ -143,13 +146,19 @@ export default {
   data() {
     return {
       isAuthed: null,
-      username: "",
+      full_name: "",
       isPractitioner: false,
+      //notification: this.$store.getters.getNotification,
     };
   },
 
   updated() {
     setAuth(this);
+    // this.notification = this.$store.getters.getNotification;
+    // setTimeout(() => {
+    //   this.$store.commit("setNotification", "");
+    //   this.notification = ""}, 5000)
+    // console.log(this.notification)
   },
 
   created () {
@@ -230,6 +239,20 @@ export default {
   padding: 30px;
 
 }
+
+/* page transitions */
+.fade-enter-active,
+.fade-leave-active {
+  transition-duration: 0.3s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0
+}
+
 
 
 </style>
