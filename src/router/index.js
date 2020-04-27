@@ -31,27 +31,23 @@ function checkAuthBeforePage(to, from, next){
 }
 
 function checkChatAuth(to, from, next){
-  // Check user is authorised to access chat url
-   if (sessionStorage.getItem('authToken') !== null || to.path === '/auth') {
+  // Check user is authorised to access chat url, retunr 404 if not
+   if (sessionStorage.getItem('authToken') !== null) {
     axios
       .get(SETTINGS.http + SETTINGS.domain + "/api/chats/" + sessionStorage.getItem('username') + "/")
       .then(function (response) {
-        response.data.forEach(function (value) {
-          if (value.chat_uuid === to.params.roomId){
+        for(let a of response.data) {
+           if(a.chat_uuid === to.params.roomId) {
             next();
-          } else {
-            next({
-              name: "/" 
-            })
-
-          }
-        }); 
+            break;
+           } 
+        }
       })
       .catch(function (error) {
         if (error.response) {
           if (error.response.data){
             next({
-              path: "/" // back to safety route //
+              name: "404 not found"
             })
           }
         } 
