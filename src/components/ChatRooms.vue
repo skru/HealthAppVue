@@ -46,7 +46,11 @@ export default {
   
   methods: {
     selectRoom(chat_uuid) {
-      this.$router.push({ path: 'chat/' + chat_uuid })
+      let peer_initiator = "";
+      if (!this.isPractitioner){
+        peer_initiator = "";
+      }
+      this.$router.push({ path: 'chat/' + chat_uuid + peer_initiator})
     }
   },
   created () {

@@ -20,12 +20,15 @@
 	    <input class="form-control" ref="message" type="text" v-model="message" required/><br/>
 	    <button type="submit" class="btn btn-block btn-success">Enter</button>
 	 </form>
-<!-- 
-	 <form @submit.prevent="peerConnect">
+
+	 <form @submit.prevent="peerInit">
       <textarea v-model="incoming"></textarea>
-      <button v-on:click="addMessage">submit</button>
+      
+      <button type="submit" class="btn ">video</button>
     </form>
-    <div >{{outgoing}}</div> -->
+    <button v-on:click="peerMessage">MESSAGE</button>
+    <div >{{outgoing}}</div>
+    <video id="chat-video" autoplay></video>
 
       
 </div>
@@ -34,31 +37,13 @@
 <script>
   import { SETTINGS } from "@/deploy_vars.js"
   import ReconnectingWebSocket from 'reconnecting-websocket';
- //  import SimplePeer from 'simple-peer';
-	//const $ = window.jQuery;
+  import SimplePeer from 'simple-peer';
+	const $ = window.jQuery;
 	let chatSocket = null;
- //      const p = new SimplePeer({
- //        initiator: location.hash === '#1',
- //        trickle: false
- //      })
- //      console.log(p)
- //      p.on('error', err => console.log('error', err))
- //      p.on('signal', data => {
- //        console.log('SIGNAL', JSON.stringify(data))
- //        //document.querySelector('#outgoing').textContent = JSON.stringify(data)
- //        this.outgoing = JSON.stringify(data)
- //      })
- //      // document.querySelector("#peer-form").addEventListener('submit', ev => {
- //      //   ev.preventDefault()
- //      //   p.signal(JSON.parse(document.querySelector('#incoming').value))
- //      // })
- //      p.on('connect', () => {
- //        console.log('CONNECT')
- //        p.send('whatever' + Math.random())
- //      })
- //      p.on('data', data => {
- //        console.log('data: ' + data)
- //      })
+	let peer = null;
+
+	
+
 
 	export default {
 
@@ -70,8 +55,8 @@
 	        roomId: this.$route.params.roomId,
           	pageUrl: SETTINGS.domain + this.$route.path,
           	messages: [],
-          	// incoming: "",
-          	// outgoing: "",
+          	incoming: "",
+          	outgoing: "",
 	      };
 	    },
 
@@ -93,10 +78,85 @@
 				}));
 			},
 
-			// peerConnect: function () {
-			// 	//console.log("TESDT", document.querySelector('#incoming').value)
-			// 	p.signal(JSON.parse(this.incoming))
-			// },
+			gotMedia: function (stream) {
+				peer.addStream(stream);
+			  	peer.on('stream', stream => {
+			    // got remote video stream, now let's show it in a video tag
+			    //let video = document.querySelector('video')
+
+			    let video = document.getElementById("chat-video")
+			    window.console.log("video", video)
+
+			    if ('srcObject' in video) {
+			      video.srcObject = stream
+			    } else {
+			      video.src = window.URL.createObjectURL(stream) // for older browsers
+			    }
+
+			    video.play()
+			  })
+			},
+
+			setupPeer: function(peer) {
+				peer.on('error', err => window.console.log('error', err))
+
+				peer.on('signal', data => {
+					window.console.log('SIGNAL', JSON.stringify(data))
+
+					if (data.type === "offer"){
+						chatSocket.send(JSON.stringify({
+							"type": "init_peer",
+							"chat_id": this.roomId,
+							"message": data,
+							"author": this.username,
+						}));
+					} else if (data.type === "answer"){
+						chatSocket.send(JSON.stringify({
+							"type": "answer_peer",
+							"chat_id": this.roomId,
+							"message": data,
+							"author": this.username,
+						}));
+					}
+					
+				})
+
+				peer.on('connect', () => {
+					window.console.log("CONNECTED PEERS")
+					peer.send('whatever' + Math.random())
+					try {
+						navigator.mediaDevices.getUserMedia({
+						  video: true,
+						  audio: true
+						}).then(this.gotMedia).catch((e) => {window.console.log(e)})
+
+						
+					}catch(e){
+						window.console.log(e)
+					}
+
+					
+
+				})
+
+				peer.on('data', data => {
+					window.console.log('data: ' + data)
+				})
+			},
+			
+
+			peerInit: function () {
+				peer = new SimplePeer({
+					initiator: true,
+					trickle: false,
+					//stream: stream
+				})
+				this.setupPeer(peer)
+			},
+
+			peerMessage: function () {
+				peer.send('MESSAGE' + Math.random())
+			}
 		},
 
 	    created(){
@@ -107,25 +167,49 @@
 	    	chatSocket.onmessage = function(e) {
 	    		
 		        var messageData = JSON.parse(e.data);
+		        window.console.log(messageData)
 
 		        if (messageData['message']["type"] === "get_messages"){
 		        	messageData['message']["message"].forEach(function (value) {
 					  self.$data.messages.push(value)
 					  
-					}); 
+					});
+
 		        } else if (messageData['message']["type"] === "add_message") {
 		        	self.$data.messages.push(messageData['message'])
+
+
+		        } else if (messageData['message']["type"] === "init_peer") {
+		        	
+		        	if (messageData['message']["author"] !== self.$data.username){
+		        		window.console.log("FROM INIT PEEP: ",messageData['message'])
+		        		peer.signal(messageData['message']["message"])
+		        	}	
+
+		        } else if (messageData['message']["type"] === "answer_peer") {
+		        	
+		        	if (messageData['message']["author"] !== self.$data.username){
+		        		window.console.log("ANSWER PEEP: ",messageData['message'])
+		        		peer.signal(messageData['message']["message"])
+		        	}		        	
 		        }
-
-
-		        
 		    };
 
 		    chatSocket.onclose = function() {
-		        //console.error('Chat socket closed unexpectedly');
+		        //window.console.error('Chat socket closed unexpectedly');
 		    };
 
 		    this.getMessages();
+
+
+		    //PEER.JS
+		    peer = new SimplePeer({
+			initiator: location.hash ===  "#1",
+				trickle: false,
+				//stream: stream
+			})
+			this.setupPeer(peer);
+			
 	    },
 	}
 </script>

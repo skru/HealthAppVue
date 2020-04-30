@@ -7,12 +7,16 @@ module.exports = {
 //             'process.env.NODE_ENV': JSON.stringify('production')
 //         })
 //     ],
+
     pwa: {
         workboxOptions: {
             skipWaiting: true,
             exclude: [
               ".htaccess"
             ]
+        },
+        watchOptions: {
+              poll: true
         },
         themeColor: "#FFFFFF",
         msTileColor: '#000000',

@@ -32,7 +32,7 @@ function checkAuthBeforePage(to, from, next){
 
 function checkChatAuth(to, from, next){
   // Check user is authorised to access chat url, retunr 404 if not
-   if (sessionStorage.getItem('authToken') !== null) {
+   if (sessionStorage.getItem('authToken') !== null || to.path === '/auth') {
     axios
       .get(SETTINGS.http + SETTINGS.domain + "/api/chats/" + sessionStorage.getItem('username') + "/")
       .then(function (response) {
