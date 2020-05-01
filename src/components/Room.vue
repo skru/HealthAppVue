@@ -18,17 +18,42 @@
 	<form @submit.prevent="addMessage" class="form-group">
 	    <label for="chat-log">Enter text</label>
 	    <input class="form-control" ref="message" type="text" v-model="message" required/><br/>
-	    <button type="submit" class="btn btn-block btn-success">Enter</button>
+	    <button type="submit" class="btn btn-block btn-success">Enter text</button>
+	    
 	 </form>
+	 <!-- <button v-on:click="peerInit" class="btn btn-block btn-success">VIDEO</button> -->
 
-	 <form @submit.prevent="peerInit">
-      <textarea v-model="incoming"></textarea>
-      
-      <button type="submit" class="btn ">video</button>
-    </form>
-    <button v-on:click="peerMessage">MESSAGE</button>
-    <div >{{outgoing}}</div>
-    <video id="chat-video" autoplay></video>
+
+   <!--  <button v-on:click="peerMessage">MESSAGE</button> -->
+
+
+    
+
+
+
+
+    <button type="button" v-on:click="peerInit" class="btn btn-block btn-success" data-toggle="modal" data-target="#chat-modal">Start video chat</button>
+
+	<div class="modal fade" id="chat-modal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-xl modal-dialog-centered">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalCenterTitle">Video</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-on:click="peerDestroy">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        <video id="chat-video" autoplay></video>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal"  v-on:click="peerDestroy">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+
 
       
 </div>
@@ -41,9 +66,6 @@
 	const $ = window.jQuery;
 	let chatSocket = null;
 	let peer = null;
-
-	
-
 
 	export default {
 
@@ -90,7 +112,7 @@
 			    if ('srcObject' in video) {
 			      video.srcObject = stream
 			    } else {
-			      video.src = window.URL.createObjectURL(stream) // for older browsers
+			      video.src = URL.createObjectURL(stream) // for older browsers
 			    }
 
 			    video.play()
@@ -129,14 +151,9 @@
 						  video: { frameRate: { ideal: 10, max: 15 } },
 						  audio: true
 						}).then(this.gotMedia).catch((e) => {window.console.log(e)})
-
-						
 					}catch(e){
 						window.console.log(e)
 					}
-
-					
-
 				})
 
 				peer.on('data', data => {
@@ -154,12 +171,19 @@
 				this.setupPeer(peer)
 			},
 
-			peerMessage: function () {
-				peer.send('MESSAGE' + Math.random())
-			}
+			peerDestroy: function () {
+				window.console.log("modal closed")
+				peer.destroy();
+			},
+
+			// peerMessage: function () {
+			// 	peer.send('MESSAGE' + Math.random())
+			// }
 		},
 
 	    created(){
+	    
+
 	    	let self = this
 	    	chatSocket = new ReconnectingWebSocket(
 		       SETTINGS.ws + SETTINGS.domain + '/api/ws/chat/' + this.roomId.normalize() + '/'
@@ -184,6 +208,7 @@
 		        	if (messageData['message']["author"] !== self.$data.username){
 		        		window.console.log("FROM INIT PEEP: ",messageData['message'])
 		        		peer.signal(messageData['message']["message"])
+		        		$('#chat-modal').modal('show')
 		        	}	
 
 		        } else if (messageData['message']["type"] === "answer_peer") {
@@ -196,19 +221,19 @@
 		    };
 
 		    chatSocket.onclose = function() {
-		        //window.console.error('Chat socket closed unexpectedly');
+		        //window.window.console.error('Chat socket closed unexpectedly');
 		    };
 
 		    this.getMessages();
 
-
-		    //PEER.JS
-		    peer = new SimplePeer({
-			initiator: location.hash ===  "#1",
+			peer = new SimplePeer({
+			initiator: false,
 				trickle: false,
 				//stream: stream
 			})
 			this.setupPeer(peer);
+
+
 			
 	    },
 	}
@@ -222,5 +247,10 @@
 }
 .card-subtitle {
 	font-size: 0.8rem;
+}
+
+#chat-video {
+	width: 100%;
+	height: auto;
 }
 </style>
