@@ -66,6 +66,7 @@
 	const $ = window.jQuery;
 	let chatSocket = null;
 	let peer = null;
+	let localStream = null;
 
 	export default {
 
@@ -101,22 +102,9 @@
 			},
 
 			gotMedia: function (stream) {
-				peer.addStream(stream);
-			  	peer.on('stream', stream => {
-			    // got remote video stream, now let's show it in a video tag
-			    //let video = document.querySelector('video')
-
-			    let video = document.getElementById("chat-video")
-			    window.console.log("video", video)
-
-			    if ('srcObject' in video) {
-			      video.srcObject = stream
-			    } else {
-			      video.src = URL.createObjectURL(stream) // for older browsers
-			    }
-
-			    video.play()
-			  })
+				localStream = stream
+				peer.addStream(localStream);
+			  	
 			},
 
 			setupPeer: function(peer) {
@@ -145,16 +133,32 @@
 
 				peer.on('connect', () => {
 					window.console.log("CONNECTED PEERS")
-					peer.send('whatever' + Math.random())
+					//peer.send('whatever' + Math.random())
 					try {
 						navigator.mediaDevices.getUserMedia({
-						  video: { frameRate: { ideal: 10, max: 15 } },
+						  video: { frameRate: { ideal: 10, max: 10 } },
 						  audio: true
 						}).then(this.gotMedia).catch((e) => {window.console.log(e)})
 					}catch(e){
 						window.console.log(e)
 					}
 				})
+
+				peer.on('stream', stream => {
+				    // got remote video stream, now let's show it in a video tag
+				    //let video = document.querySelector('video')
+
+				    let video = document.getElementById("chat-video")
+				    window.console.log("video", video)
+
+				    if ('srcObject' in video) {
+				      video.srcObject = stream
+				    } else {
+				      video.src = URL.createObjectURL(stream) // for older browsers
+				    }
+
+				    video.play()
+				  })
 
 				peer.on('data', data => {
 					window.console.log('data: ' + data)
@@ -173,7 +177,15 @@
 
 			peerDestroy: function () {
 				window.console.log("modal closed")
-				peer.destroy();
+				//peer.destroy();
+				//peer.addStream(localStream);
+				//peer.removeStream(localStream)
+				chatSocket.send(JSON.stringify({
+					"type": "close_peer",
+					"chat_id": this.roomId,
+					//"message": data,
+					"author": this.username,
+				}));
 			},
 
 			// peerMessage: function () {
@@ -189,7 +201,7 @@
 		       SETTINGS.ws + SETTINGS.domain + '/api/ws/chat/' + this.roomId.normalize() + '/'
 		    );  
 	    	chatSocket.onmessage = function(e) {
-	    		
+	    		//let self = this;
 		        var messageData = JSON.parse(e.data);
 		        window.console.log(messageData)
 
@@ -216,7 +228,27 @@
 		        	if (messageData['message']["author"] !== self.$data.username){
 		        		window.console.log("ANSWER PEEP: ",messageData['message'])
 		        		peer.signal(messageData['message']["message"])
-		        	}		        	
+		        	}	
+
+		        } else if (messageData['message']["type"] === "close_peer") {
+		        	
+		        	$('#chat-modal').modal('hide')
+
+		        	// stop camera/microphone
+		        	const tracks = localStream.getTracks();
+					tracks.forEach(function(track) {
+						track.stop();
+					});
+
+					// destroy p2p connection;
+		        	peer.destroy();
+
+		        	// initiate new peer objects
+		        	peer = new SimplePeer({
+						initiator: false,
+						trickle: false,
+					})
+					self.setupPeer(peer);
 		        }
 		    };
 
@@ -227,14 +259,10 @@
 		    this.getMessages();
 
 			peer = new SimplePeer({
-			initiator: false,
+				initiator: false,
 				trickle: false,
-				//stream: stream
 			})
 			this.setupPeer(peer);
-
-
-			
 	    },
 	}
 </script>
