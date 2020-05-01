@@ -63,6 +63,8 @@
   import { SETTINGS } from "@/deploy_vars.js"
   import ReconnectingWebSocket from 'reconnecting-websocket';
   import SimplePeer from 'simple-peer';
+  import adapter from 'webrtc-adapter';
+
 	const $ = window.jQuery;
 	let chatSocket = null;
 	let peer = null;
@@ -169,7 +171,7 @@
 			peerInit: function () {
 				peer = new SimplePeer({
 					initiator: true,
-					trickle: false,
+					trickle: true,
 					//stream: stream
 				})
 				this.setupPeer(peer)
@@ -246,7 +248,7 @@
 		        	// initiate new peer objects
 		        	peer = new SimplePeer({
 						initiator: false,
-						trickle: false,
+						trickle: true,
 					})
 					self.setupPeer(peer);
 		        }
@@ -260,7 +262,7 @@
 
 			peer = new SimplePeer({
 				initiator: false,
-				trickle: false,
+				trickle: true,
 			})
 			this.setupPeer(peer);
 	    },
