@@ -126,7 +126,7 @@
 					peer.send('whatever' + Math.random())
 					try {
 						navigator.mediaDevices.getUserMedia({
-						  video: true,
+						  video: { frameRate: { ideal: 10, max: 15 } },
 						  audio: true
 						}).then(this.gotMedia).catch((e) => {window.console.log(e)})
 
