@@ -113,7 +113,7 @@
 				peer.on('error', err => window.console.log('error', err))
 
 				peer.on('signal', data => {
-					window.console.log('SIGNAL', JSON.stringify(data))
+					//window.console.log('SIGNAL', JSON.stringify(data))
 
 					if (data.type === "offer"){
 						chatSocket.send(JSON.stringify({
@@ -125,6 +125,13 @@
 					} else if (data.type === "answer"){
 						chatSocket.send(JSON.stringify({
 							"type": "answer_peer",
+							"chat_id": this.roomId,
+							"message": data,
+							"author": this.username,
+						}));
+					} else if (data.renegotiate === true){
+						chatSocket.send(JSON.stringify({
+							"type": "init_peer",
 							"chat_id": this.roomId,
 							"message": data,
 							"author": this.username,
@@ -151,7 +158,7 @@
 				    //let video = document.querySelector('video')
 
 				    let video = document.getElementById("chat-video")
-				    window.console.log("video", video)
+				    //window.console.log("video", video)
 
 				    if ('srcObject' in video) {
 				      video.srcObject = stream
@@ -162,9 +169,9 @@
 				    video.play()
 				  })
 
-				peer.on('data', data => {
-					window.console.log('data: ' + data)
-				})
+				// peer.on('data', data => {
+				// 	window.console.log('data: ' + data)
+				// })
 			},
 			
 
@@ -172,20 +179,14 @@
 				peer = new SimplePeer({
 					initiator: true,
 					trickle: false,
-					//stream: stream
 				})
 				this.setupPeer(peer)
 			},
 
 			peerDestroy: function () {
-				window.console.log("modal closed")
-				//peer.destroy();
-				//peer.addStream(localStream);
-				//peer.removeStream(localStream)
 				chatSocket.send(JSON.stringify({
 					"type": "close_peer",
 					"chat_id": this.roomId,
-					//"message": data,
 					"author": this.username,
 				}));
 			},
@@ -205,7 +206,7 @@
 	    	chatSocket.onmessage = function(e) {
 	    		//let self = this;
 		        var messageData = JSON.parse(e.data);
-		        window.console.log(messageData)
+		        //window.console.log("MESSAGEDATA",messageData)
 
 		        if (messageData['message']["type"] === "get_messages"){
 		        	messageData['message']["message"].forEach(function (value) {
@@ -228,7 +229,7 @@
 		        } else if (messageData['message']["type"] === "answer_peer") {
 		        	
 		        	if (messageData['message']["author"] !== self.$data.username){
-		        		window.console.log("ANSWER PEEP: ",messageData['message'])
+		        		window.console.log("FROM ANSWER PEEP: ",messageData['message'])
 		        		peer.signal(messageData['message']["message"])
 		        	}	
 
