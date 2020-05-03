@@ -18,19 +18,8 @@
 	<form @submit.prevent="addMessage" class="form-group">
 	    <label for="chat-log">Enter text</label>
 	    <input class="form-control" ref="message" type="text" v-model="message" required/><br/>
-	    <button type="submit" class="btn btn-block btn-success">Enter text</button>
-	    
+	    <button type="submit" class="btn btn-block btn-success">Enter text</button>	    
 	 </form>
-	 <!-- <button v-on:click="peerInit" class="btn btn-block btn-success">VIDEO</button> -->
-
-
-   <!--  <button v-on:click="peerMessage">MESSAGE</button> -->
-
-
-    
-
-
-
 
     <button type="button" v-on:click="peerInit" class="btn btn-block btn-success" data-toggle="modal" data-target="#chat-modal">Start video chat</button>
 
@@ -51,11 +40,7 @@
 	      </div>
 	    </div>
 	  </div>
-	</div>
-
-
-
-      
+	</div>     
 </div>
 </template>
 
@@ -80,8 +65,6 @@
 	        roomId: this.$route.params.roomId,
           	pageUrl: SETTINGS.domain + this.$route.path,
           	messages: [],
-          	incoming: "",
-          	outgoing: "",
 	      };
 	    },
 
@@ -110,6 +93,7 @@
 			},
 
 			setupPeer: function(peer) {
+				peer._debug = window.console.log
 				peer.on('error', err => window.console.log('error', err))
 
 				peer.on('signal', data => {
@@ -142,24 +126,23 @@
 
 				peer.on('connect', () => {
 					window.console.log("CONNECTED PEERS")
-					//peer.send('whatever' + Math.random())
-					try {
-						navigator.mediaDevices.getUserMedia({
-						  video: { frameRate: { ideal: 10, max: 10 } },
-						  audio: true
-						}).then(this.gotMedia).catch((e) => {window.console.log(e)})
-					}catch(e){
-						window.console.log(e)
-					}
+					var videoPrompt = confirm("Allow video chat"); 
+		            if (videoPrompt != null) { 
+		                try {
+							navigator.mediaDevices.getUserMedia({
+							  video: { frameRate: { ideal: 10, max: 10 } },
+							  audio: true
+							}).then(this.gotMedia).catch((e) => {window.console.log(e)})
+						}catch(e){
+							window.console.log(e)
+						}
+		            } 
+					
 				})
 
 				peer.on('stream', stream => {
 				    // got remote video stream, now let's show it in a video tag
-				    //let video = document.querySelector('video')
-
 				    let video = document.getElementById("chat-video")
-				    //window.console.log("video", video)
-
 				    if ('srcObject' in video) {
 				      video.srcObject = stream
 				    } else {
@@ -168,17 +151,13 @@
 
 				    video.play()
 				  })
-
-				// peer.on('data', data => {
-				// 	window.console.log('data: ' + data)
-				// })
 			},
 			
-
 			peerInit: function () {
+				peer.destroy();
 				peer = new SimplePeer({
 					initiator: true,
-					trickle: false,
+					trickle: true,
 				})
 				this.setupPeer(peer)
 			},
@@ -190,10 +169,6 @@
 					"author": this.username,
 				}));
 			},
-
-			// peerMessage: function () {
-			// 	peer.send('MESSAGE' + Math.random())
-			// }
 		},
 
 	    created(){
@@ -204,7 +179,6 @@
 		       SETTINGS.ws + SETTINGS.domain + '/api/ws/chat/' + this.roomId.normalize() + '/'
 		    );  
 	    	chatSocket.onmessage = function(e) {
-	    		//let self = this;
 		        var messageData = JSON.parse(e.data);
 		        //window.console.log("MESSAGEDATA",messageData)
 
@@ -249,7 +223,7 @@
 		        	// initiate new peer objects
 		        	peer = new SimplePeer({
 						initiator: false,
-						trickle: false,
+						trickle: true,
 					})
 					self.setupPeer(peer);
 		        }
@@ -263,8 +237,9 @@
 
 			peer = new SimplePeer({
 				initiator: false,
-				trickle: false,
+				trickle: true,
 			})
+
 			this.setupPeer(peer);
 	    },
 	}
