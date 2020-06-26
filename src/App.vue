@@ -184,7 +184,7 @@ export default {
 }
 
 .nav-background {
-  background: #005eb8;
+  background: #487A7B;
 }
 
 
@@ -215,14 +215,14 @@ export default {
 }
 
 .router-link-exact-active {
-  /*color: #005eb8 !important;
+  /*color: #487A7B !important;
   background: white;*/
   border: 2px solid white;
   margin: 0 auto;
 }
 
 .nav-logo {
-  background: #005eb8;
+  background: #487A7B;
   border: none;
   margin: 0;
 }

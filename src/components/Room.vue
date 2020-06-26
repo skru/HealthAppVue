@@ -157,7 +157,7 @@
 				peer.destroy();
 				peer = new SimplePeer({
 					initiator: true,
-					trickle: true,
+					trickle: false,
 				})
 				this.setupPeer(peer)
 			},
@@ -223,7 +223,7 @@
 		        	// initiate new peer objects
 		        	peer = new SimplePeer({
 						initiator: false,
-						trickle: true,
+						trickle: false,
 					})
 					self.setupPeer(peer);
 		        }
@@ -237,7 +237,7 @@
 
 			peer = new SimplePeer({
 				initiator: false,
-				trickle: true,
+				trickle: false,
 			})
 
 			this.setupPeer(peer);
