@@ -49,14 +49,14 @@
               </div>
               <div class="form-group">
                 <label for="email">Email</label>
-                  <input v-model="email" type="email" class="form-control" id="email" placeholder="e.g. johnsemail@email.com" required>
+                  <input v-model="email" type="email" class="form-control" placeholder="e.g. johnsemail@email.com" required>
                   <div class="alert alert-danger" v-if="errors.emails != null">
                       {{ errors.email[0]}}
                   </div>
               </div>
               <div class="form-group">
                 <label for="username">Username</label>
-                  <input v-model="username" type="text" class="form-control" id="username" placeholder="e.g. John" required>
+                  <input v-model="username" type="text" class="form-control" placeholder="e.g. John" required>
                   <div class="alert alert-danger" v-if="errors.username != null">
                       {{ errors.username[0] }}
                   </div>
@@ -64,7 +64,7 @@
 
               <div class="form-group">
                 <label for="practitioners">Your Practitioner</label>
-                <select v-model="practitioner" class="form-control" id="practitioners" required>
+                <select v-model="practitioner" class="form-control" required>
                   <option disabled value="" class="option-select">Please select one</option>
                   <option v-for="pract in practitionerArray" 
                     v-bind:value="pract.value" 
@@ -80,7 +80,7 @@
 
               <div class="form-group">
                 <label for="password">Password</label>
-                  <input v-model="password" type="password" class="form-control" id="password" required>
+                  <input v-model="password" type="password" class="form-control" required>
                   <small id="passwordHelpBlock" class="form-text text-muted">
                     Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
                   </small>
@@ -107,11 +107,11 @@
               </div>
               <div class="form-group">
                 <label for="username">Username</label>
-                  <input v-model="username" type="text" class="form-control" id="username" placeholder="e.g. John" required>
+                  <input v-model="username" type="text" class="form-control" placeholder="e.g. John" required>
               </div>
               <div class="form-group">
                 <label for="password">Password</label>
-                  <input v-model="password" type="password" class="form-control" id="password" placeholder="Password" required>
+                  <input v-model="password" type="password" class="form-control" placeholder="Password" required>
               </div>
               <br>
               <button type="submit" class="btn btn-block btn-success">
@@ -126,7 +126,7 @@
 </template>
 
 <script>
-import { SETTINGS } from "@/deploy_vars.js"
+
 const axios = require('axios');
 
 export default {
@@ -146,7 +146,7 @@ export default {
     let self = this;
     // get all practitioners to fill select field
     axios
-      .get(SETTINGS.http + SETTINGS.domain + "/api/practitioners/")
+      .get(process.env.API + "/api/practitioners/")
       .then(function (response) {
         for (var index in response.data) {
           let username = response.data[index].username;
@@ -166,7 +166,7 @@ export default {
     signUp() {
       let self = this;
       axios
-        .post(SETTINGS.http + SETTINGS.domain + "/api/auth/users/", self.$data)
+        .post(process.env.API + "/api/auth/users/", self.$data)
         .then(function (response) {
           self.$toasted.success('Account created')
           self.signIn();
@@ -189,7 +189,7 @@ export default {
       };
 
       axios
-        .post(SETTINGS.http + SETTINGS.domain + "/api/auth/token/login/", credentials)
+        .post(process.env.API + "/api/auth/token/login/", credentials)
         .then(function (response) {
 
           axios.defaults.headers.common['Authorization'] = "Token " + response.data.auth_token; //set auth header

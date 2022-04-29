@@ -45,7 +45,6 @@
 </template>
 
 <script>
-  import { SETTINGS } from "@/deploy_vars.js"
   import ReconnectingWebSocket from 'reconnecting-websocket';
   import SimplePeer from 'simple-peer';
   import adapter from 'webrtc-adapter';
@@ -63,7 +62,7 @@
 	        chatLog: "",
 	        username: sessionStorage.getItem('username'),
 	        roomId: this.$route.params.roomId,
-          	pageUrl: SETTINGS.domain + this.$route.path,
+          	pageUrl: process.env.API + this.$route.path,
           	messages: [],
 	      };
 	    },
@@ -176,7 +175,7 @@
 
 	    	let self = this
 	    	chatSocket = new ReconnectingWebSocket(
-		       SETTINGS.ws + SETTINGS.domain + '/api/ws/chat/' + this.roomId.normalize() + '/'
+		       process.env.API_WS + '/api/ws/chat/' + this.roomId.normalize() + '/'
 		    );  
 	    	chatSocket.onmessage = function(e) {
 		        var messageData = JSON.parse(e.data);

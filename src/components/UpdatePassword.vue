@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import { SETTINGS } from "@/deploy_vars.js"
 const axios = require('axios');
 // const $ = window.jQuery;
 export default {
@@ -45,7 +44,7 @@ export default {
     updatePassword(data) {
       let self = this;
       axios
-          .post(SETTINGS.http + SETTINGS.domain + "/api/auth/users/set_password/", self.$data)
+          .post(process.env.API + "/api/auth/users/set_password/", self.$data)
           .then(function (response) {
             self.$toasted.success('Password Updated');
             self.$router.push("/");

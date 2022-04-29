@@ -82,7 +82,7 @@
               </ul>
               <p>If you need help now, but it's not an emergency:</p>
               <ul>
-                <li>go to 111.nhs.uk or <a href="tel:111">call 111</a></li>
+                <li>go to <a href="111.nhs.uk">111.nhs.uk</a> or <a href="tel:111">call 111</a></li>
               </ul>
             </span>
           </div>
@@ -94,19 +94,18 @@
   <footer>
       <nav class="navbar fixed-bottom navbar-light bg-light">
         <p class="pull-left">Copyright Joseph T Mohan 2020.</p>
-        <p class="pull-right">Contact: jm1179@canterbury.ac.uk</p>
+        <p class="pull-right">Contact: joe.t.mohan@gmail.com</p>
       </nav>
   </footer>
 </div>
 </template>
 
 <script>
-import { SETTINGS } from "@/deploy_vars.js"
 const axios = require('axios');
 
 function getConditionsApi(self){
   axios
-      .get(SETTINGS.http + SETTINGS.domain + "/api/conditions/", self.$data)
+      .get(process.env.API + "/api/conditions/", self.$data)
       .then(function (response) {
         setConditionsCache(response.data);
       })

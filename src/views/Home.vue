@@ -11,7 +11,7 @@
 	    <div class="card-body">
 	      <h5 class="card-title">About</h5>
 	      <hr>
-	      <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec fermentum pellentesque ullamcorper. Fusce efficitur orci vel ligula lacinia, a tincidunt nibh sodales. Integer rhoncus sit amet augue accumsan aliquet. Duis ut tempus diam, vel commodo metus. Integer magna augue, consectetur eu arcu non, auctor iaculis massa. Morbi luctus in urna sollicitudin tempor. Aenean dignissim ultrices metus vitae ornare. </p>
+	      <p class="card-text">A University project demonstrating the use of a Progressive Web App frontend and REST API backend. Vue frontend, Django REST Framework backend </p>
 	    </div>
 		</router-link>
 	  </div>

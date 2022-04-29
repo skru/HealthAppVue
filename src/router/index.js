@@ -11,7 +11,6 @@ import UpdatePassword from "@/components/UpdatePassword";
 
 import store from "../store/index.js";
 
-import { SETTINGS } from "@/deploy_vars.js"
 const axios = require('axios');
 
 Vue.use(VueRouter);
@@ -35,7 +34,7 @@ function checkChatAuth(to, from, next){
    if (sessionStorage.getItem('authToken') !== null || to.path === '/auth') {
     axios.defaults.headers.common['Authorization'] = "Token " + sessionStorage.getItem('authToken');
     axios
-      .get(SETTINGS.http + SETTINGS.domain + "/api/chats/" + sessionStorage.getItem('username') + "/")
+      .get(process.env.API + "/api/chats/" + sessionStorage.getItem('username') + "/")
       .then(function (response) {
         for(let a of response.data) {
            if(a.chat_uuid === to.params.roomId) {

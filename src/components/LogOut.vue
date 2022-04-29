@@ -1,5 +1,4 @@
 <script>
-import { SETTINGS } from "@/deploy_vars.js"
 const axios = require('axios');
 
 function logoutAuthed(self){
@@ -27,7 +26,7 @@ export default {
         // so remove session data whatever happens. 
         // user will recieve new token on login
         axios
-          .post(SETTINGS.http + SETTINGS.domain + "/api/auth/token/logout/")
+          .post(process.env.API + "/api/auth/token/logout/")
           .then(function (response) {
             logoutAuthed(self)
           })

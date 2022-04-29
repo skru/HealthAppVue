@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import { SETTINGS } from "@/deploy_vars.js"
 const axios = require('axios');
 
 export default {
@@ -56,7 +55,7 @@ export default {
   created () {
     let self = this;
     axios
-      .get(SETTINGS.http + SETTINGS.domain + "/api/chats/" + self.$data.username + "/")
+      .get(process.env.API + "/api/chats/" + self.$data.username + "/")
       .then(function (response) {
         self.$data.participants = response.data
       })
